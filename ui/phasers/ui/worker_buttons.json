@@ -1,0 +1,31 @@
+{
+    "type": "LinearLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "vertical",
+    "gravity": "center",
+    "background": "#88000000",
+    "children": [
+        {
+            "type": "TextView",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "padding": 10,
+            "background": "black",
+            "gravity": "center",
+            "text": "Phasers"
+        },
+        {
+            "type": "Button",
+            "id": "phaser_power",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "ARM",
+            "background": "black",
+            "on_click": {
+                "worker_id": "phasers",
+                "msg_id": "toggle_power"
+            }
+        }
+    ]
+}

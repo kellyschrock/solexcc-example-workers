@@ -1,0 +1,23 @@
+{
+    "id": "my_dialog",
+    "screen_id": "start",
+    "title": "Plain dialog",
+    "message": "Your vehicle will now disarm. Press Cancel to confirm.",
+    "buttons": [
+        {
+            "id": "cancel",
+            "text": "Cancel",
+            "on_click": {
+                "action": "dismiss"
+            }
+        },
+        {
+            "id": "ok",
+            "text": "OK, Disarm",
+            "on_click": {
+                "worker_id": "start_panel",
+                "msg_id": "my_dialog_ok"
+            }
+        }
+    ]
+}

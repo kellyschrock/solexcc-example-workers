@@ -1,0 +1,38 @@
+{
+    "map_main": {
+        "type": "Button",
+        "id": "say_something",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "text": "Click me",
+        "textColor": "yellow",
+        "on_click": {
+            "worker_id": "map", "msg_id": "say_something"
+        }
+    },
+    "map_bottom": {
+        "type": "LinearLayout",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "orientation": "horizontal",
+        "gravity": "center",
+        "background": "#33000000",
+        "children": [
+            {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "120m to next waypoint",
+                "textColor": "green"
+            },
+            {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginLeft": "12dip",
+                "text": "Sprayer on",
+                "textColor": "yellow"
+            }
+        ]
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "video_main": {
+        "type": "LinearLayout",
+        "id": "main_overlay",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "gravity": "center",
+        "background": "#05ff00ff",
+        "children": [
+            {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "Text overlay on video",
+                "textColor": "white",
+                "textSize": 18,
+                "gravity": "center",
+                "shadow": {
+                    "dx": 6, "dy": 6, "radius": 8, "color": "black"
+                }
+            }
+        ]
+    },
+    "video_bottom": {
+        "type": "LinearLayout",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "orientation": "horizontal",
+        "gravity": "center",
+        "padding": "6dip",
+        "background": "#33000000",
+        "children": [
+            {
+                "type": "Button",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "Button on Video",
+                "textColor": "red",
+                "background": "@null"
+            }
+        ]
+    }
+}

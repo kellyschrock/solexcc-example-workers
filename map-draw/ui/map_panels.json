@@ -1,0 +1,52 @@
+{
+    "command_buttons": {
+        "type": "LinearLayout",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "orientation": "horizontal",
+        "padding": "8dip",
+        "background": "#88000000",
+        "children": [
+            {
+                "type": "Button",
+                "id": "btn_draw_circle",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "Circle",
+                "textAllCaps": false,
+                "background": "@null",
+                "on_click": { "worker_id": "map_draw", "msg_id": "draw_circle" }
+            },
+            {
+                "type": "Button",
+                "id": "btn_draw_line",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "Line",
+                "textAllCaps": false,
+                "background": "@null",
+                "on_click": { "worker_id": "map_draw", "msg_id": "draw_line" }
+            },
+            {
+                "type": "Button",
+                "id": "btn_draw_poly",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "Polygon",
+                "textAllCaps": false,
+                "background": "@null",
+                "on_click": { "worker_id": "map_draw", "msg_id": "draw_poly" }
+            },
+            {
+                "type": "Button",
+                "id": "btn_clear_all",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "Clear",
+                "textAllCaps": false,
+                "background": "@null",
+                "on_click": { "worker_id": "map_draw", "msg_id": "clear_all" }
+            }
+        ]
+    }
+}

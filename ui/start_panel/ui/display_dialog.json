@@ -1,0 +1,83 @@
+{
+    "id": "my_dialog",
+    "screen_id": "start",
+    "title": "Hey, a dialog.",
+    "layout": {
+        "type": "LinearLayout",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "vertical",
+        "gravity": "top",
+        "padding": 8,
+        "children": [
+            {
+                "type": "EditText",
+                "id": "edit_first_name",
+                "name": "first_name",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "hint": "First Name",
+                "inputType": "textCapWords",
+                "textColor": "#FFFFFF"
+            },
+            {
+                "type": "EditText",
+                "id": "edit_last_name",
+                "name": "last_name",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "hint": "Last Name",
+                "inputType": "textCapWords",
+                "textColor": "#FFFFFF"
+            },
+            {
+                "type": "LinearLayout",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "orientation": "horizontal",
+                "children": [
+                    {
+                        "type": "TextView",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "text": "Size"
+                    },
+                    {
+                        "type": "SeekBar",
+                        "id": "seek_size",
+                        "name": "size",
+                        "layout_width": "match_parent",
+                        "layout_height": "wrap_content",
+                        "max": 100,
+                        "progress": 30
+                    }
+                ]
+            }
+        ]
+    },
+    "buttons": [
+        {
+            "id": "cancel",
+            "text": "Cancel",
+            "on_click": {
+                "action": "dismiss"
+            }
+        },
+        {
+            "id": "ok",
+            "text": "Okay",
+            "on_click": {
+                "worker_id": "start_panel",
+                "msg_id": "my_dialog_ok"
+            }
+        },
+        {
+            "id": "something_else",
+            "text": "Something Else",
+            "on_click": {
+                "worker_id": "start_panel",
+                "msg_id": "my_dialog_other_message"
+            }
+        }
+    ]
+}

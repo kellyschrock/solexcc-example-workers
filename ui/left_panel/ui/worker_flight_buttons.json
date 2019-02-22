@@ -1,0 +1,47 @@
+{
+    "type": "LinearLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "vertical",
+    "children": [
+        {
+            "type": "Button",
+            "id": "btn_land_now",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "LAND NOW",
+            "textColor": "red",
+            "background": "@null",
+            "on_click": {
+                "worker_id": "left_panel", "msg_id": "land_now"
+            }
+        },
+        {
+            "type": "TextView",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "Fuel: 80%",
+            "gravity": "center",
+            "textColor": "green"
+        },
+        {
+            "type": "TextView",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "layout_marginTop": "8dip",
+            "text": "Lights",
+            "gravity": "center"
+        },
+        {
+            "type": "Switch",
+            "id": "sw_lights",
+            "name": "lights",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "center",
+            "on_check": {
+                "worker_id": "left_panel", "msg_id": "set_lights"
+            }
+        }
+    ]
+}

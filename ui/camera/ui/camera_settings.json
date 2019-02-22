@@ -1,0 +1,147 @@
+{
+  "id": "camera_settings_dialog",
+  "screen_id": "flight",
+  "title": "Camera Settings",
+  "layout": {
+    "type": "LinearLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "vertical",
+    "gravity": "top",
+    "padding": "8dip",
+    "children": [
+        {
+            "type": "LinearLayout", "layout_width": "match_parent", "layout_height": "wrap_content", "orientation": "horizontal", 
+            "paddingTop": "12dip", "paddingBottom": "12dip",
+            "children": [
+                {
+                    "type": "TextView", "layout_width": "0dip", "layout_height": "wrap_content", "layout_weight": 1.0,
+                    "text": "Video Resolution",  "textSize": 18
+                },
+                {
+                    "type": "Spinner", "id": "spin_video_res", "name": "video_res", "layout_width": "wrap_content", "layout_height": "wrap_content",
+                    "items": [
+                        {"id": "low", "text": "Low"},
+                        {"id": "med", "text": "Medium"},
+                        {"id": "high", "text": "High"},
+                        {"id": "4k", "text": "4K"}
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "LinearLayout", "layout_width": "match_parent", "layout_height": "wrap_content", "orientation": "horizontal", 
+            "paddingTop": "12dip", "paddingBottom": "12dip",
+            "children": [
+                {
+                    "type": "TextView", "layout_width": "0dip", "layout_height": "wrap_content", "layout_weight": 1.0,
+                    "text": "Photo Resolution",  "textSize": 18
+                },
+                {
+                    "type": "Spinner", "id": "spin_photo_res", "name": "photo_res", "layout_width": "wrap_content", "layout_height": "wrap_content",
+                    "items": [
+                        {"id": "low", "text": "Low"},
+                        {"id": "med", "text": "Medium"},
+                        {"id": "high", "text": "High"}
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "LinearLayout", "layout_width": "match_parent", "layout_height": "wrap_content", "orientation": "horizontal", 
+            "paddingTop": "12dip", "paddingBottom": "12dip",
+            "children": [
+                {
+                    "type": "TextView", "layout_width": "0dip", "layout_height": "wrap_content", "layout_weight": 1.0,
+                    "text": "Low Light",  "textSize": 18
+                },
+                {
+                    "type": "Switch", "id": "low_light", "name": "low_light", "layout_width": "wrap_content", "layout_height": "wrap_content"
+                }
+            ]
+        },
+        {
+            "type": "LinearLayout",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "horizontal",
+            "paddingTop": "12dip", "paddingBottom": "12dip",
+            "children": [
+                {
+                    "type": "TextView", "layout_width": "0dip", "layout_height": "wrap_content", "layout_weight": 1.0, 
+                    "text": "Video Mode",  "textSize": 18
+                },
+                {
+                    "type": "Spinner",
+                    "id": "spin_video_mode",
+                    "name": "video_mode",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "items": [
+                        {
+                            "id": "pal",
+                            "text": "PAL"
+                        },
+                        {
+                            "id": "ntsc",
+                            "text": "NTSC"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "LinearLayout",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "horizontal",
+            "paddingTop": "12dip", "paddingBottom": "12dip",
+            "children": [
+                {
+                    "type": "TextView", "layout_width": "0dip", "layout_height": "wrap_content", "layout_weight": 1.0, 
+                    "text": "Video EV",  "textSize": 18
+                },
+                {
+                    "type": "Spinner",
+                    "id": "spin_video_ev",
+                    "name": "video_ev",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "items": [
+                        { "id": "-3.0", "text": "-3.0" },
+                        { "id": "-2.5", "text": "-2.5" },
+                        { "id": "-2.0", "text": "-2.0" },
+                        { "id": "-1.5", "text": "-1.5" },
+                        { "id": "-1.0", "text": "-1.0" },
+                        { "id": "-0.5", "text": "-0.5" },
+                        { "id": "-0.0", "text": "-0.0" },
+                        { "id": "0.5", "text": "0.5" },
+                        { "id": "1.0", "text": "1.0" },
+                        { "id": "1.5", "text": "1.5" },
+                        { "id": "2.0", "text": "2.0" },
+                        { "id": "2.5", "text": "2.5" },
+                        { "id": "3.0", "text": "3.0" }
+                    ]
+                }
+            ]
+        }
+    ]
+  },
+  "buttons": [
+    {
+      "id": "cancel",
+      "text": "Cancel",
+      "on_click": {
+        "action": "dismiss"
+      }
+    },
+    {
+      "id": "ok",
+      "text": "Apply",
+      "on_click": {
+        "worker_id": "start_panel",
+        "msg_id": "my_dialog_ok"
+      }
+    }
+  ]
+}

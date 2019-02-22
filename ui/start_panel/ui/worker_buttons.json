@@ -1,0 +1,69 @@
+{
+    "type": "LinearLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "vertical",
+    "gravity": "center",
+    "background": "#88000000",
+    "children": [
+        {
+            "type": "TextView",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "padding": 10,
+            "background": "black",
+            "gravity": "center",
+            "text": "Buttons"
+        },
+        {
+            "type": "Button",
+            "id": "do_dialog",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "Show Dialog",
+            "textAllCaps": false,
+            "background": "black",
+            "on_click": {
+                "worker_id": "start_panel",
+                "msg_id": "show_dialog"
+            }
+        },
+        {
+            "type": "Button",
+            "id": "msg_dialog",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "Plain Dialog",
+            "textAllCaps": false,
+            "background": "black",
+            "on_click": {
+                "worker_id": "start_panel",
+                "msg_id": "message_dialog"
+            }
+        },
+        {
+            "type": "Button",
+            "id": "do_fullscreen",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "Widgets!",
+            "textAllCaps": false,
+            "background": "black",
+            "on_click": {
+                "worker_id": "start_panel",
+                "msg_id": "show_fullscreen"
+            }
+        },
+        {
+            "type": "TextView",
+            "id": "current_time",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "Some text",
+            "textColor": "white",
+            "background": "#55000000",
+            "gravity": "center",
+            "padding": 20
+        }
+    ]
+}

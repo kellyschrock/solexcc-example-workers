@@ -1,0 +1,46 @@
+{
+    "type": "LinearLayout",
+    "layout_width": "wrap_content",
+    "layout_height": "wrap_content",
+    "orientation": "vertical",
+    "background": "#66000000",
+    "children": [
+      {
+        "type": "TextView",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "padding": 10,
+        "text": "Toast",
+        "textColor": "white"
+      },
+      {
+        "type": "Space",
+        "layout_width": "match_parent",
+        "layout_height": 2,
+        "background": "#aaffffff"
+      },
+      {
+          "type": "LinearLayout",
+          "layout_width": "wrap_content",
+          "layout_height": "wrap_content",
+          "orientation": "horizontal",
+          "gravity": "center_vertical",
+          "padding": 12,
+          "children": [
+            {
+              "type": "Button",
+              "id": "send_toast",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "text": "Toast",
+              "textAllCaps": false,
+              "background": "@null",
+              "on_click": {
+                "worker_id": "toast",
+                "msg_id": "send_toast"
+              }
+            }
+          ]
+      }
+    ]
+}
