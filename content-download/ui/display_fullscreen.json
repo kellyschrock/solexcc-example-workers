@@ -1,0 +1,337 @@
+{
+  "id": "my_fullscreen",
+  "screen_id": "start",
+  "on_back": {
+    "worker_id": "start_panel",
+    "msg_id": "start_screen_abort"
+  },
+  "layout": {
+    "type": "LinearLayout",
+    "layout_width": "match_parent",
+    "layout_height": "match_parent",
+    "orientation": "vertical",
+    "background": "#ee000000",
+    "gravity": "top",
+    "padding": "32dip",
+    "children": [
+      {
+        "type": "TextView",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "left",
+        "text": "Widgets",
+        "textColor": "white",
+        "textSize": 24,
+        "shadow": {
+            "dx": 6, "dy": 6, "radius": 10, "color": "black"
+        }
+      },
+      {
+        "type": "TextView",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "left",
+        "text": "A demo of all the basic widgets",
+        "shadow": {
+            "dx": 6, "dy": 6, "radius": 10, "color": "black"
+        }
+      },
+      {
+        "type": "LinearLayout",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "horizontal",
+        "gravity": "center_vertical",
+        "padding": 24,
+        "children": [
+            {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginRight": "12dip",
+                "text": "Spinner",
+                "textColor": "yellow"
+            },
+            {
+                "type": "Spinner",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "items": [
+                    {"id": "item1", "text": "Item 1" },
+                    {"id": "item2", "text": "Item 2" },
+                    {"id": "item3", "text": "Item 3" }
+                ]
+            },
+            {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginRight": 12,
+                "text": "Radio Group",
+                "textColor": "yellow"
+            },
+            {
+                "type": "RadioGroup",
+                "id": "my_radio_group",
+                "name": "gender",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginLeft": "20",
+                "orientation": "horizontal",
+                "children": [
+                    {
+                        "type": "RadioButton",
+                        "id": "rdo_one",
+                        "name": "male",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "text": "Male"
+                    },
+                    {
+                        "type": "RadioButton",
+                        "id": "rdo_two",
+                        "name": "female",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "text": "Female",
+                        "textStyle": "bold"
+                    }
+                ],
+                "on_check": {
+                    "0": 0
+                }
+            },
+            {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginLeft": 12,
+                "layout_marginRight": 12,
+                "text": "CheckBox",
+                "textColor": "yellow"
+            },
+            {
+                "type": "CheckBox",
+                "id": "my_check",
+                "name": "checked_out",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "Check this out",
+                "on_check": {
+                    "0": 0
+                }
+            }
+        ]
+      },
+      {
+          "type": "LinearLayout",
+          "layout_width": "match_parent",
+          "layout_height": "wrap_content",
+          "orientation": "horizontal",
+          "children": [
+                {
+                    "type": "TextView",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 12,
+                    "text": "EditText",
+                    "textColor": "yellow"
+                },
+                {
+                    "type": "EditText",
+                    "id": "edit_first_name",
+                    "name": "first_name",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "minWidth": 200,
+                    "inputType": "textCapWords",
+                    "maxLength": 80,
+                    "hint": "First Name",
+                    "on_text_changed": {
+                        "0": 0
+                    }
+                },
+                {
+                    "type": "EditText",
+                    "id": "edit_first_name",
+                    "name": "first_name",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 40,
+                    "minWidth": 200,
+                    "inputType": "textCapWords",
+                    "maxLength": 80,
+                    "hint": "Last Name",
+                    "on_text_changed": {
+                        "0": 0
+                    }
+                },
+                {
+                    "type": "EditText",
+                    "id": "edit_int",
+                    "name": "age",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 40,
+                    "minWidth": 200,
+                    "inputType": "number",
+                    "hint": "Numeric (int)",
+                    "on_text_changed": {
+                        "0": 0
+                    }
+                },
+                {
+                    "type": "EditText",
+                    "id": "edit_decimal",
+                    "name": "weight",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 40,
+                    "minWidth": 200,
+                    "inputType": "numberDecimal",
+                    "hint": "Numeric (decimal)",
+                    "on_text_changed": {
+                        "0": 0
+                    }
+                },
+                {
+                    "type": "Button",
+                    "id": "send_values",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 20,
+                    "text": "Send these values",
+                    "on_click": {
+                        "worker_id": "start_panel",
+                        "msg_id": "show_edit_values"
+                    }
+                }
+        ]
+      },
+      {
+          "type": "LinearLayout",
+          "layout_width": "match_parent",
+          "layout_height": "wrap_content",
+          "orientation": "horizontal",
+          "padding": 30,
+          "children": [
+                {
+                    "type": "TextView",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 12,
+                    "text": "Button",
+                    "textColor": "yellow"
+                },
+                {
+                    "type": "Button",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 12,
+                    "text": "Normal"
+                },
+                {
+                    "type": "Button",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 12,
+                    "text": "Naked Button",
+                    "textAllCaps": false,
+                    "background": "@null"
+                },
+                {
+                    "type": "Button",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 12,
+                    "text": "Dark green",
+                    "textAllCaps": false,
+                    "background": "#8800aa00"
+                },
+                {
+                    "type": "Button",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 12,
+                    "text": "Icon left",
+                    "iconLeft": "$(img)/start_panel/ic_left.png",
+                    "iconPadding": 30,
+                    "textAllCaps": false,
+                    "background": "#880000aa",
+                    "paddingRight": 20
+                },
+                {
+                    "type": "Button",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 12,
+                    "text": "Icon Right",
+                    "iconRight": "$(img)/start_panel/ic_left.png",
+                    "iconPadding": 30,
+                    "textAllCaps": false,
+                    "background": "#880000aa",
+                    "paddingRight": 20
+                },
+                {
+                    "type": "ImageButton",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 12,
+                    "text": "Image button",
+                    "textAllCaps": false,
+                    "icon": "$(img)/start_panel/shutter.png",
+                    "paddingRight": 20
+                }
+          ]
+      },
+        {
+            "type": "LinearLayout",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "vertical",
+            "children": [
+                {
+                    "type": "TextView",
+                    "layout_width": "wrap_content",
+                    "layout_height": "wrap_content",
+                    "layout_marginLeft": 12,
+                    "layout_marginRight": 12,
+                    "text": "SeekBar",
+                    "textColor": "yellow"
+                },
+                {
+                    "type": "SeekBar",
+                    "id": "seek_something",
+                    "name": "demo_progress",
+                    "layout_width": "match_parent",
+                    "layout_height": "wrap_content",
+                    "progress": 50,
+                    "max": 100,
+                    "on_progress": {
+                        "worker_id": "start_panel", "msg_id": "show_progress"
+                    }
+                },
+                {
+                    "type": "ProgressBar",
+                    "id": "progress_something",
+                    "name": "progress_something",
+                    "layout_width": "match_parent",
+                    "layout_height": "wrap_content",
+                    "layout_marginTop": "24dip",
+                    "progress": 20,
+                    "max": 100
+                }
+            ]
+        }
+    ]
+  }
+}
+
