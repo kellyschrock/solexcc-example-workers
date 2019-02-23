@@ -193,6 +193,30 @@ function onRosterChanged() {
     d("Roster has been changed");
 }
 
+function getMissionItemSupport(workerId) {
+    return {
+        id: ATTRS.id,
+        name: ATTRS.name,
+        actions: [
+            { 
+                id: "video_start", 
+                name: "Start Video", 
+                msg_id: "video_start", 
+                params: [
+                    {id: "frame_rate", name: "Frame rate", type: "enum", values: [
+                        {id: "low", name: "Low"},
+                        {id: "med", name: "Medium"},
+                        {id: "hi", name: "High"}
+                    ], 
+                    default: "med"}
+                ]
+            },
+            { id: "video_stop", name: "Stop Video", msg_id: "video_stop" },
+            { id: "photo", name: "Take Photo", msg_id: "take_photo" },
+        ]
+    }
+}
+
 exports.getAttributes = getAttributes;
 exports.loop = loop;
 exports.onLoad = onLoad;
@@ -203,4 +227,5 @@ exports.onRosterChanged = onRosterChanged;
 exports.onScreenEnter = onScreenEnter;
 exports.onScreenExit = onScreenExit;
 exports.onImageDownload = onImageDownload;
+exports.getMissionItemSupport = getMissionItemSupport;
 
