@@ -8,7 +8,11 @@ const ATTRS = {
     // Does this worker want to loop?
     looper: false,
     // Mavlink messages we're interested in
-    mavlinkMessages: []
+    mavlinkMessages: ["MISSION_ITEM_REACHED"]
+};
+
+const mMessageMap = {
+    "MISSION_ITEM_REACHED": onMissionItemReached
 };
 
 const mActionMap = {};
@@ -38,6 +42,14 @@ function onUnload() {
 
 function onMavlinkMessage(msg) {
     d(`onMavlinkMessage(): msg.name=$msg.name`);
+
+    if(!msg) return;
+    if(!msg.name) return;
+
+    const func = mMessageMap[msg.name];
+    if(func) {
+        func(msg);
+    }
 }
 
 function onGCSMessage(msg) {
@@ -57,28 +69,6 @@ function onGCSMessage(msg) {
     return result;
 }
 
-/*
-Message looks like this:
-
-    {
-        "id":"upload_mission",
-        "action_map":[
-            {"index":4,"actions":[
-                    {"worker_id":"camera","id":"photo"}
-                ]
-            },
-            {"index":6,"actions":[
-                    {"worker_id":"fake_lights","id":"off"}
-                ]
-            },
-            {"index":0,"actions":[
-                    {"worker_id":"fake_lights","id":"on","params":{"brightness":64,"color":"green"}}
-                ]
-            }
-        ]
-    }
-
-*/
 function loadActionMap(msg) {
     d(`loadActionMap(): ${JSON.stringify(msg)}`);
 
@@ -141,6 +131,35 @@ function getFeatures() {
     return output;
 }
 
+function onMissionItemReached(msg) {
+    const actions = mActionMap[msg.seq];
+    if(actions) {
+        actions.map(function(action) {
+            // Make a message to send to the worker
+            const msg = {
+                id: action.id
+            };
+
+            if(action.params) {
+                for(let prop in action.params) {
+                    msg[prop] = action.params[prop];
+                }
+            }
+
+            if(action.worker_id) {
+                const worker = ATTRS.findWorkerById(action.worker_id);
+                if(worker && worker.onGCSMessage) {
+                    try {
+                        worker.onGCSMessage(action);
+                    } catch (ex) {
+                        d("Error executing action: " + ex.message);
+                    }
+                }
+            }
+        });
+    }
+}
+
 exports.getAttributes = getAttributes;
 exports.loop = loop;
 exports.onLoad = onLoad;
@@ -150,18 +169,6 @@ exports.onGCSMessage = onGCSMessage;
 exports.onRosterChanged = onRosterChanged;
 exports.getFeatures = getFeatures;
 
-function testMapping() {
-    const d = {
-        action_map: [
-            {index: 20, actions: [{id: "a", name: "derp" }]},
-            {index: 12, actions: [{id: "b", name: "derp2" }]},
-            {index: 96, actions: [{id: "c", name: "derp3" }]}
-        ]
-    }
-
-    loadActionMap(d);
-}
-
 if(process.mainModule === module) {
-    testMapping();
+    d("Hi!");
 }
