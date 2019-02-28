@@ -55,7 +55,7 @@ function getFeatures() {
     return {
         video: { 
             supported: true,
-            ports: [5600, 5601]
+            ports: [5600]
         }
     };
 }

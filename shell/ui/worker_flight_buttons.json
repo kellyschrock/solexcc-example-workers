@@ -1,0 +1,59 @@
+{
+    "type": "LinearLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "vertical",
+    "children": [
+        {
+            "type": "TextView",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "Shell",
+            "gravity": "center",
+            "textColor": "white"
+        },
+        {
+            "type": "Space",
+            "layout_width": "match_parent",
+            "layout_height": "1dip",
+            "background": "white"
+        },
+        {
+            "type": "Button",
+            "id": "btn_start_shell",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "start",
+            "background": "@null",
+            "on_click": {
+                "worker_id": "shell",
+                "msg_id": "start"
+            }
+        },
+        {
+            "type": "Button",
+            "id": "btn_speack",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "speak",
+            "background": "@null",
+            "on_click": {
+                "worker_id": "shell",
+                "msg_id": "speak",
+                "command": "speak"
+            }
+        },
+        {
+            "type": "Button",
+            "id": "btn_stop_shell",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "stop",
+            "background": "@null",
+            "on_click": {
+                "worker_id": "shell",
+                "msg_id": "stop"
+            }
+        }
+    ]
+}
