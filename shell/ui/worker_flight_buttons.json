@@ -10,7 +10,8 @@
             "layout_height": "wrap_content",
             "text": "Shell",
             "gravity": "center",
-            "textColor": "white"
+            "textColor": "white",
+            "layout_marginBottom": "6dip"
         },
         {
             "type": "Space",
@@ -32,15 +33,28 @@
         },
         {
             "type": "Button",
-            "id": "btn_speack",
+            "id": "btn_hello",
             "layout_width": "match_parent",
             "layout_height": "wrap_content",
-            "text": "speak",
+            "text": "hello",
             "background": "@null",
             "on_click": {
                 "worker_id": "shell",
-                "msg_id": "speak",
-                "command": "speak"
+                "msg_id": "command",
+                "command": "say_hello"
+            }
+        },
+        {
+            "type": "Button",
+            "id": "btn_hello2",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "hello2",
+            "background": "@null",
+            "on_click": {
+                "worker_id": "shell",
+                "msg_id": "command",
+                "command": "say_something_else"
             }
         },
         {

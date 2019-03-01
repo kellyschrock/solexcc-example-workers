@@ -58,8 +58,8 @@ function onGCSMessage(msg) {
             return stopShellProcess();
         }
 
-        case "speak": { 
-            return shellCommand({command: msg.id});
+        case "command": { 
+            return shellCommand(msg);
         }
     }
 
@@ -107,6 +107,16 @@ function startShellProcess() {
 
     mChildProcess = child;
 
+    ATTRS.sendGCSMessage(ATTRS.id, {
+        id: "screen_update",
+        screen_id: "commands",
+        panel_id: "worker_flight_buttons",
+        values: {
+            btn_stop_shell: { enabled: true },
+            btn_start_shell: { enabled: false }
+        }
+    });
+
     return {ok: true, message: "started"};
 }
 
@@ -117,6 +127,16 @@ function stopShellProcess() {
         d(`Child process is not running`);
         return { ok: false, message: "Child process is not running" };
     }
+
+    ATTRS.sendGCSMessage(ATTRS.id, {
+        id: "screen_update",
+        screen_id: "commands",
+        panel_id: "worker_flight_buttons",
+        values: {
+            btn_stop_shell: { enabled: false },
+            btn_start_shell: { enabled: true }
+        }
+    });
 
     shellCommand({command: "quit"});
 
