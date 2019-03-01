@@ -81,7 +81,6 @@ function onScreenEnter(screen) {
     switch(screen) {
         case utils.Const.SCREEN_COMMANDS: {
             const body = loadLayoutFor(utils.Const.PANEL_WORKER_FLIGHT_BUTTONS);
-            d(`body=${JSON.stringify(body)}`);
 
             if (body) {
                 if (body) {
