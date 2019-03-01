@@ -13,6 +13,9 @@ const ATTRS = {
     mavlinkMessages: []
 };
 
+// Some kind of fake internal state
+var mLightsOn = false;
+
 function d(str) {
     ATTRS.log(ATTRS.id, str);
 }
@@ -60,6 +63,8 @@ function onGCSMessage(msg) {
 
         case "set_lights": {
             const word = (msg.lights)? "on": "off";
+            mLightsOn = msg.lights;
+
             utils.sendSpeechMessage(ATTRS, `lights ${word}`, utils.SpeechType.TEXT);
             break;
         }
@@ -84,6 +89,11 @@ function onScreenEnter(screen) {
 
             if (body) {
                 if (body) {
+                    const button = utils.findViewById(body, "sw_lights");
+                    if(button) {
+                        button.checked = mLightsOn;
+                    }
+                    
                     return {
                         screen_id: screen,
                         worker_flight_buttons: body

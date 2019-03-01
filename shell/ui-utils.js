@@ -82,3 +82,23 @@ exports.sendToastMessage = function(attrs, text, length) {
         id: "toast", text: text, length: len
     });
 }
+
+//
+// Find view by id
+//
+exports.findViewById = function(body, id) {
+    if(!body) return null;
+    if(!body.children) return null;
+
+    const children = body.children;
+    for(let i = 0, size = children.length; i < size; ++i) {
+        const child = children[i];
+        console.log(`child=${child}`);
+
+        if(child.id && child.id === id) {
+            return child;
+        }
+    }
+
+    return null;
+};
