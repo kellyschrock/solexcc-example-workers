@@ -13,6 +13,8 @@ const ATTRS = {
     mavlinkMessages: []
 };
 
+let api = null;
+
 function d(str) {
     ATTRS.log(ATTRS.id, str);
 }
@@ -31,6 +33,7 @@ function loop() {
 // Called when this worker is loaded.
 function onLoad() {
     d("onLoad()");
+    api = ATTRS.api;
 }
 
 // Called when unloading
@@ -117,8 +120,8 @@ function onGCSMessage(msg) {
 //
 function onScreenEnter(screen) {
     switch(screen) {
-        case ATTRS.api.WorkerUI.Const.SCREEN_FLIGHT: {
-            const body = ATTRS.api.WorkerUI.loadLayout(__dirname, ATTRS.api.WorkerUI.Const.PANEL_CAMERA);
+        case api.WorkerUI.Const.SCREEN_FLIGHT: {
+            const body = api.WorkerUI.loadLayout(__dirname, api.WorkerUI.Const.PANEL_CAMERA);
 
             return (body)? {
                 screen_id: screen, 
@@ -138,11 +141,11 @@ function onScreenExit(screen) {
 
 // Serve an image if it exists.
 function onImageDownload(name) {
-    return ATTRS.api.WorkerUI.serveImage(__dirname, name);
+    return api.WorkerUI.serveImage(__dirname, name);
 }
 
 function sendCameraError(str) {
-    ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, str, ATTRS.api.WorkerUI.SpeechType.ERROR);
+    api.WorkerUI.sendSpeechMessage(ATTRS, str, api.WorkerUI.SpeechType.ERROR);
 }
 
 function sendUpdateRecordingStatus(recording) {
@@ -164,7 +167,7 @@ function sendUpdateRecordingStatus(recording) {
 }
 
 function sendSettingsDialogMessage() {
-    const body = ATTRS.api.WorkerUI.loadLayout(__dirname, "camera_settings");
+    const body = api.WorkerUI.loadLayout(__dirname, "camera_settings");
     if (body) {
         ATTRS.sendGCSMessage(ATTRS.id, { id: "display_dialog", content: body });
     }
