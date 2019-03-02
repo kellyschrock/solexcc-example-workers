@@ -1,7 +1,5 @@
 'use strict';
 
-const utils = require("../common/ui-utils");
-
 const ATTRS = {
     id: "toast",
     // Name/description
@@ -54,7 +52,7 @@ function onGCSMessage(msg) {
 
     switch(msg.id) {
         case "send_toast": {
-            utils.sendToastMessage(ATTRS, new Date().toString());
+            ATTRS.api.WorkerUI.sendToastMessage(ATTRS, new Date().toString());
             break;
         }
 
@@ -73,8 +71,8 @@ function onGCSMessage(msg) {
 //
 function onScreenEnter(screen) {
     switch(screen) {
-        case utils.Const.SCREEN_VIDEO: {
-            const body = loadLayoutFor(utils.Const.PANEL_WORKER_SHOT_BUTTONS);
+        case ATTRS.api.WorkerUI.Const.SCREEN_VIDEO: {
+            const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_SHOT_BUTTONS);
 
             return (body)? {
                 screen_id: screen, 
@@ -93,7 +91,7 @@ function onScreenExit(screen) {
 }
 
 function loadLayoutFor(panel) {
-    return utils.loadLayout(__dirname, panel);
+    return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
 }
 
 /**

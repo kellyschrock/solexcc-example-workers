@@ -1,7 +1,6 @@
 'use strict';
 
-const utils = require("../common/ui-utils");
-const camera = require("../common/camera");
+const camera = require("./camera.js");
 
 const ATTRS = {
     id: "camera",
@@ -118,8 +117,8 @@ function onGCSMessage(msg) {
 //
 function onScreenEnter(screen) {
     switch(screen) {
-        case utils.Const.SCREEN_FLIGHT: {
-            const body = utils.loadLayout(__dirname, utils.Const.PANEL_CAMERA);
+        case ATTRS.api.WorkerUI.Const.SCREEN_FLIGHT: {
+            const body = ATTRS.api.WorkerUI.loadLayout(__dirname, ATTRS.api.WorkerUI.Const.PANEL_CAMERA);
 
             return (body)? {
                 screen_id: screen, 
@@ -139,11 +138,11 @@ function onScreenExit(screen) {
 
 // Serve an image if it exists.
 function onImageDownload(name) {
-    return utils.serveImage(__dirname, name);
+    return ATTRS.api.WorkerUI.serveImage(__dirname, name);
 }
 
 function sendCameraError(str) {
-    utils.sendSpeechMessage(ATTRS, str, utils.SpeechType.ERROR);
+    ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, str, ATTRS.api.WorkerUI.SpeechType.ERROR);
 }
 
 function sendUpdateRecordingStatus(recording) {
@@ -165,7 +164,7 @@ function sendUpdateRecordingStatus(recording) {
 }
 
 function sendSettingsDialogMessage() {
-    const body = utils.loadLayout(__dirname, "camera_settings");
+    const body = ATTRS.api.WorkerUI.loadLayout(__dirname, "camera_settings");
     if (body) {
         ATTRS.sendGCSMessage(ATTRS.id, { id: "display_dialog", content: body });
     }

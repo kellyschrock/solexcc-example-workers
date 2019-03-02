@@ -1,7 +1,5 @@
 'use strict';
 
-const utils = require("../common/ui-utils");
-
 const ATTRS = {
     id: "map",
     // Name/description
@@ -54,7 +52,7 @@ function onGCSMessage(msg) {
 
     switch(msg.id) {
         case "say_something": {
-            utils.sendSpeechMessage(ATTRS, "Hey there", utils.SpeechType.TEXT);
+            ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, "Hey there", ATTRS.api.WorkerUI.SpeechType.TEXT);
             break;
         }
 
@@ -73,7 +71,7 @@ function onGCSMessage(msg) {
 //
 function onScreenEnter(screen) {
     switch(screen) {
-        case utils.Const.SCREEN_MAP: {
+        case ATTRS.api.WorkerUI.Const.SCREEN_MAP: {
             const body = loadLayoutFor("map_panels");
 
             return (body)? {
@@ -94,7 +92,7 @@ function onScreenExit(screen) {
 }
 
 function loadLayoutFor(panel) {
-    return utils.loadLayout(__dirname, panel);
+    return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
 }
 
 /**

@@ -1,7 +1,5 @@
 'use strict';
 
-const utils = require("../common/ui-utils");
-
 const ATTRS = {
     id: "start_panel",
     // Name/description
@@ -95,7 +93,7 @@ function onGCSMessage(msg) {
         }
 
         case "show_edit_values": {
-            utils.sendToastMessage(ATTRS, JSON.stringify(msg), utils.ToastLength.LONG);
+            ATTRS.api.WorkerUI.sendToastMessage(ATTRS, JSON.stringify(msg), ATTRS.api.WorkerUI.ToastLength.LONG);
             break;
         }
 
@@ -117,8 +115,8 @@ function onGCSMessage(msg) {
 // Return a UI for the specified screen.
 function onScreenEnter(screen) {
     switch(screen) {
-        case utils.Const.SCREEN_START: {
-            const body = loadLayoutFor(utils.Const.PANEL_WORKER_BUTTONS);
+        case ATTRS.api.WorkerUI.Const.SCREEN_START: {
+            const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_BUTTONS);
 
             return (body)? {
                 screen_id: screen, 
@@ -137,7 +135,7 @@ function onScreenExit(screen) {
 }
 
 function onImageDownload(name) {
-    return utils.serveImage(__dirname, name);
+    return ATTRS.api.WorkerUI.serveImage(__dirname, name);
 }
 
 function sendShowDialogMessage() {
@@ -182,7 +180,7 @@ function formatDate(d) {
 }
 
 function loadLayoutFor(panel) {
-    return utils.loadLayout(__dirname, panel);
+    return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
 }
 
 /**

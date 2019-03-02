@@ -2,7 +2,6 @@
 
 const spawn = require("child_process").spawn;
 const path = require("path");
-const ui_utils = require("./ui-utils.js");
 
 const ATTRS = {
     id: "shell",
@@ -166,18 +165,18 @@ function onRosterChanged() {
 
 function onScreenEnter(screen) {
     switch (screen) {
-        case ui_utils.Const.SCREEN_COMMANDS: {
-            const body = ui_utils.loadLayout(__dirname, ui_utils.Const.PANEL_WORKER_FLIGHT_BUTTONS);
+        case ATTRS.api.WorkerUI.Const.SCREEN_COMMANDS: {
+            const body = ATTRS.api.WorkerUI.loadLayout(__dirname, ATTRS.api.WorkerUI.Const.PANEL_WORKER_FLIGHT_BUTTONS);
 
             if (body) {
                 if (body) {
                     const running = (mChildProcess != null);
 
-                    const startbutton = ui_utils.findViewById(body, "btn_start_shell");
+                    const startbutton = ATTRS.api.WorkerUI.findViewById(body, "btn_start_shell");
                     d(`startbutton=${JSON.stringify(startbutton)}`);
                     if(startbutton) startbutton.enabled = !running;
 
-                    const stopbutton = ui_utils.findViewById(body, "btn_stop_shell");
+                    const stopbutton = ATTRS.api.WorkerUI.findViewById(body, "btn_stop_shell");
                     d(`stopbutton=${JSON.stringify(stopbutton)}`);
                     if(stopbutton) stopbutton.enabled = running;
 

@@ -1,7 +1,5 @@
 'use strict';
 
-const utils = require("../common/ui-utils");
-
 const ATTRS = {
     id: "left_panel",
     // Name/description
@@ -57,7 +55,7 @@ function onGCSMessage(msg) {
 
     switch(msg.id) {
         case "land_now": {
-            utils.sendSpeechMessage(ATTRS, "Mode land", utils.SpeechType.TEXT);
+            ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, "Mode land", ATTRS.api.WorkerUI.SpeechType.TEXT);
             break;
         }
 
@@ -65,7 +63,7 @@ function onGCSMessage(msg) {
             const word = (msg.lights)? "on": "off";
             mLightsOn = msg.lights;
 
-            utils.sendSpeechMessage(ATTRS, `lights ${word}`, utils.SpeechType.TEXT);
+            ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, `lights ${word}`, ATTRS.api.WorkerUI.SpeechType.TEXT);
             break;
         }
 
@@ -84,12 +82,12 @@ function onGCSMessage(msg) {
 //
 function onScreenEnter(screen) {
     switch(screen) {
-        case utils.Const.SCREEN_COMMANDS: {
-            const body = loadLayoutFor(utils.Const.PANEL_WORKER_FLIGHT_BUTTONS);
+        case ATTRS.api.WorkerUI.Const.SCREEN_COMMANDS: {
+            const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_FLIGHT_BUTTONS);
 
             if (body) {
                 if (body) {
-                    const button = utils.findViewById(body, "sw_lights");
+                    const button = ATTRS.api.WorkerUI.findViewById(body, "sw_lights");
                     if(button) {
                         button.checked = mLightsOn;
                     }
@@ -116,7 +114,7 @@ function onScreenExit(screen) {
 }
 
 function loadLayoutFor(panel) {
-    return utils.loadLayout(__dirname, panel);
+    return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
 }
 
 /**

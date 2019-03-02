@@ -1,7 +1,5 @@
 'use strict';
 
-const utils = require("../common/ui-utils");
-
 const ATTRS = {
     id: "phasers",
     // Name/description
@@ -67,7 +65,7 @@ function onGCSMessage(msg) {
         }
 
         case "set_mode": {
-            utils.sendSpeechMessage(ATTRS, `Phasers set to ${msg.phaser_mode}`);
+            ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, `Phasers set to ${msg.phaser_mode}`);
             break;
         }
 
@@ -102,11 +100,11 @@ function onGCSMessage(msg) {
 //
 function onScreenEnter(screen) {
     switch(screen) {
-        case utils.Const.SCREEN_START: {
+        case ATTRS.api.WorkerUI.Const.SCREEN_START: {
             const buttonText = (mPhasersArmed)? "Disarm": "Arm";
             const buttonColor = (mPhasersArmed) ? "#ff0000aa" : "#ffaa0000";
 
-            const body = loadLayoutFor(utils.Const.PANEL_WORKER_BUTTONS);
+            const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_BUTTONS);
 
             if(body) {
                 body.children[1].text = buttonText;
@@ -121,15 +119,15 @@ function onScreenEnter(screen) {
             }
         }
 
-        case utils.Const.SCREEN_FLIGHT: {
+        case ATTRS.api.WorkerUI.Const.SCREEN_FLIGHT: {
             if(mPhasersArmed) {
-                const body = loadLayoutFor(utils.Const.PANEL_WORKER_SHOT_BUTTONS);
+                const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_SHOT_BUTTONS);
 
                 if(body) {
                     return {
                         screen_id: screen,
                         worker_shot_buttons: body,
-                        worker_status: loadLayoutFor(utils.Const.PANEL_WORKER_STATUS)
+                        worker_status: loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_STATUS)
                     };
                 } else {
                     return null;
@@ -144,12 +142,12 @@ function onScreenExit(screen) {
 }
 
 function loadLayoutFor(panel) {
-    return utils.loadLayout(__dirname, panel);
+    return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
 }
 
 // Serve an image if it exists.
 function onImageDownload(name) {
-    return utils.serveImage(__dirname, name);
+    return ATTRS.api.WorkerUI.serveImage(__dirname, name);
 }
 
 /**
@@ -172,7 +170,7 @@ function armPhasers() {
 }
 
 function firePhasers(msg) {
-    utils.sendSpeechMessage(ATTRS, "Kaboom", "text");
+    ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, "Kaboom", "text");
 
     // Update the phasers screen.
     ATTRS.sendGCSMessage(ATTRS.id, {

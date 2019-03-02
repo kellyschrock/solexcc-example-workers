@@ -1,7 +1,5 @@
 'use strict';
 
-const utils = require("../common/ui-utils");
-
 const ATTRS = {
     id: "video",
     // Name/description
@@ -54,7 +52,7 @@ function onGCSMessage(msg) {
 
     switch(msg.id) {
         case "say_something": {
-            utils.sendSpeechMessage(ATTRS, "Hey stop it", utils.SpeechType.TEXT);
+            ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, "Hey stop it", ATTRS.api.WorkerUI.SpeechType.TEXT);
             break;
         }
 
@@ -73,7 +71,7 @@ function onGCSMessage(msg) {
 //
 function onScreenEnter(screen) {
     switch(screen) {
-        case utils.Const.SCREEN_VIDEO: {
+        case ATTRS.api.WorkerUI.Const.SCREEN_VIDEO: {
             const body = loadLayoutFor("video_panels");
 
             return (body)? {
@@ -94,7 +92,7 @@ function onScreenExit(screen) {
 }
 
 function loadLayoutFor(panel) {
-    return utils.loadLayout(__dirname, panel);
+    return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
 }
 
 /**

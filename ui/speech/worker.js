@@ -1,7 +1,5 @@
 'use strict';
 
-const utils = require("../common/ui-utils");
-
 const ATTRS = {
     id: "speech",
     // Name/description
@@ -54,17 +52,17 @@ function onGCSMessage(msg) {
 
     switch(msg.id) {
         case "say_text": {
-            utils.sendSpeechMessage(ATTRS, "Hello", utils.SpeechType.TEXT);
+            ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, "Hello", ATTRS.api.WorkerUI.SpeechType.TEXT);
             break;
         }
 
         case "say_tts": {
-            utils.sendSpeechMessage(ATTRS, "Just a normal TTS phrase");
+            ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, "Just a normal TTS phrase");
             break;
         }
 
         case "say_error": {
-            utils.sendSpeechMessage(ATTRS, "Something bad has happened", utils.SpeechType.ERROR);
+            ATTRS.api.WorkerUI.sendSpeechMessage(ATTRS, "Something bad has happened", ATTRS.api.WorkerUI.SpeechType.ERROR);
             break;
         }
 
@@ -83,8 +81,8 @@ function onGCSMessage(msg) {
 //
 function onScreenEnter(screen) {
     switch(screen) {
-        case utils.Const.SCREEN_FLIGHT: {
-            const body = loadLayoutFor(utils.Const.PANEL_WORKER_SHOT_BUTTONS);
+        case ATTRS.api.WorkerUI.Const.SCREEN_FLIGHT: {
+            const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_SHOT_BUTTONS);
 
             return (body)? {
                 screen_id: screen, 
@@ -103,7 +101,7 @@ function onScreenExit(screen) {
 }
 
 function loadLayoutFor(panel) {
-    return utils.loadLayout(__dirname, panel);
+    return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
 }
 
 /**
