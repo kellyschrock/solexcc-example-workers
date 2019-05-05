@@ -1,0 +1,17 @@
+{
+    "default": { "id": "default", "text": "Default", "is_default": true },
+    "plane_mode": { "id": "plane_mode", "text": "Plane mode", "command": "plane_mode" },
+    "car_mode": { "id": "car_mode", "text": "Car mode", "command": "car_mode" },
+    "cop_mode": { "id": "cop_mode", "text": "Cop mode", "command": "cop_mode" },
+    "party_mode": { "id": "party_mode", "text": "Party mode", "command": "party_mode" },
+    "cylon_mode": { "id": "cylon_mode", "text": "Cylon mode", "command": "cylon_mode" },
+    "blink_red": { "id": "blink_red", "text": "Blink Red", "command": "blink red" },
+    "color_red": { "id": "color_red", "text": "Red", "command": "color red" },
+    "blink_green": { "id": "blink_green", "text": "Blink Green", "command": "blink green" },
+    "color_green": { "id": "color_green", "text": "Green", "command": "color green" },
+    "blink_blue": { "id": "blink_blue", "text": "Blink Blue", "command": "blink blue" },
+    "color_blue": { "id": "color_blue", "text": "Blue", "command": "color blue" },
+    "blink_white": { "id": "blink_white", "text": "Blink white", "command": "blink white" },
+    "color_white": { "id": "color_white", "text": "White", "command": "color white" },
+    "all_off": { "id": "all_off", "text": "All Off", "command": "all_off" }
+}

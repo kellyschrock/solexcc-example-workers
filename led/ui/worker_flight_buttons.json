@@ -5,21 +5,6 @@
     "orientation": "vertical",
     "children": [
         {
-            "type": "TextView",
-            "layout_width": "match_parent",
-            "layout_height": "wrap_content",
-            "text": "LEDs",
-            "gravity": "center",
-            "textColor": "white",
-            "layout_marginBottom": "6dip"
-        },
-        {
-            "type": "Space",
-            "layout_width": "match_parent",
-            "layout_height": "1dip",
-            "background": "white"
-        },
-        {
             "type": "Button",
             "id": "btn_run_led",
             "layout_width": "match_parent",
@@ -30,6 +15,14 @@
                 "worker_id": "leds",
                 "msg_id": "config_dialog"
             }
+        },
+        {
+            "type": "TextView",
+            "id": "txt_led_name",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "gravity": "center",
+            "textSize": 14
         }
     ]
 }
