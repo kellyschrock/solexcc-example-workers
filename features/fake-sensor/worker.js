@@ -44,31 +44,35 @@ function onGCSMessage(msg) {
     return result;
 }
 
-function onRosterChanged() {
-    d("Roster has been changed");
-}
-
-function getMissionItemSupport(workerId) {
-    return {
-        id: ATTRS.id,
-        name: ATTRS.name,
-        actions: [
-            { 
-                id: "start", 
-                name: "Start", 
-                msg_id: "start", 
-                params: [
+function onBroadcastRequest(msg) {
+    switch(msg.type) {
+        case "mission_item_support": {
+            return {
+                id: ATTRS.id,
+                name: ATTRS.name,
+                actions: [
                     { 
-                        id: "sample_rate", 
-                        name: "Sample rate", 
-                        type: "int", 
-                        min: 10, max: 100, default: 20
+                        id: "start", 
+                        name: "Start", 
+                        msg_id: "start", 
+                        params: [
+                            { 
+                                id: "sample_rate", 
+                                name: "Sample rate", 
+                                type: "int", 
+                                min: 10, max: 100, default: 20
+                            },
+                            { id: "depth", name: "Sensor depth", type: "decimal", default: 16.9 }
+                        ]
                     },
-                    { id: "depth", name: "Sensor depth", type: "decimal", default: 16.9 }
+                    { id: "stop", name: "Stop", msg_id: "stop" }
                 ]
-            },
-            { id: "stop", name: "Stop", msg_id: "stop" }
-        ]
+            }
+        }
+
+        default: {
+            return null;
+        }
     }
 }
 
@@ -78,5 +82,5 @@ exports.onLoad = onLoad;
 exports.onUnload = onUnload;
 exports.onMavlinkMessage = onMavlinkMessage;
 exports.onGCSMessage = onGCSMessage;
-exports.onRosterChanged = onRosterChanged;
-exports.getMissionItemSupport = getMissionItemSupport;
+exports.onBroadcastRequest = onBroadcastRequest;
+

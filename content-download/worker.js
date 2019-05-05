@@ -1,7 +1,5 @@
 'use strict';
 
-const utils = require("../ui/common/ui-utils");
-
 const ATTRS = {
     id: "content_download",
     // Name/description
@@ -112,7 +110,7 @@ function onGCSMessage(msg) {
 //
 function onScreenEnter(screen) {
     switch(screen) {
-        case utils.Const.SCREEN_START: {
+        case ATTRS.api.WorkerUI.Const.SCREEN_START: {
             const body = loadLayoutFor("worker_buttons");
 
             return (body)? {
@@ -121,7 +119,7 @@ function onScreenEnter(screen) {
             }: null;
         }
 
-        case utils.Const.SCREEN_FLIGHT: {
+        case ATTRS.api.WorkerUI.Const.SCREEN_FLIGHT: {
             const body = loadLayoutFor("worker_shot_buttons");
 
             return (body)? {
@@ -141,7 +139,7 @@ function onScreenExit(screen) {
 }
 
 function loadLayoutFor(panel) {
-    return utils.loadLayout(__dirname, panel);
+    return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
 }
 
 /**
@@ -181,22 +179,12 @@ function onContentDownload(msgId, contentId) {
     }
 }
 
-/**
- * Called when the worker roster (the list of installed workers) is changed.
- * If a worker needs to communicate with other workers, this is an opportunity to
- * check whether workers it needs to interact with are available.
- */
-function onRosterChanged() {
-    d("Roster has been changed");
-}
-
 exports.getAttributes = getAttributes;
 exports.loop = loop;
 exports.onLoad = onLoad;
 exports.onUnload = onUnload;
 exports.onMavlinkMessage = onMavlinkMessage;
 exports.onGCSMessage = onGCSMessage;
-exports.onRosterChanged = onRosterChanged;
 exports.onScreenEnter = onScreenEnter;
 exports.onScreenExit = onScreenExit;
 exports.onContentDownload = onContentDownload;

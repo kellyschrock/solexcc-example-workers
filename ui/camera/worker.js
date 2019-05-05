@@ -186,36 +186,35 @@ function sendEVCompUpdate(evcomp) {
     });
 }
 
-/**
- * Called when the worker roster (the list of installed workers) is changed.
- * If a worker needs to communicate with other workers, this is an opportunity to
- * check whether workers it needs to interact with are available.
- */
-function onRosterChanged() {
-    d("Roster has been changed");
-}
-
-function getMissionItemSupport(workerId) {
-    return {
-        id: ATTRS.id,
-        name: ATTRS.name,
-        actions: [
-            { 
-                id: "video_start", 
-                name: "Start Video", 
-                msg_id: "video_start", 
-                params: [
-                    {id: "frame_rate", name: "Frame rate", type: "enum", values: [
-                        {id: "low", name: "Low"},
-                        {id: "med", name: "Medium"},
-                        {id: "hi", name: "High"}
-                    ], 
-                    default: "med"}
+function onBroadcastRequest(msg) {
+    switch(msg.type) {
+        case "mission_item_support": {
+            return {
+                id: ATTRS.id,
+                name: ATTRS.name,
+                actions: [
+                    { 
+                        id: "video_start", 
+                        name: "Start Video", 
+                        msg_id: "video_start", 
+                        params: [
+                            {id: "frame_rate", name: "Frame rate", type: "enum", values: [
+                                {id: "low", name: "Low"},
+                                {id: "med", name: "Medium"},
+                                {id: "hi", name: "High"}
+                            ], 
+                            default: "med"}
+                        ]
+                    },
+                    { id: "video_stop", name: "Stop Video", msg_id: "video_stop" },
+                    { id: "photo", name: "Take Photo", msg_id: "take_photo" },
                 ]
-            },
-            { id: "video_stop", name: "Stop Video", msg_id: "video_stop" },
-            { id: "photo", name: "Take Photo", msg_id: "take_photo" },
-        ]
+            }
+        }
+
+        default: {
+            return null;
+        }
     }
 }
 
@@ -225,9 +224,7 @@ exports.onLoad = onLoad;
 exports.onUnload = onUnload;
 exports.onMavlinkMessage = onMavlinkMessage;
 exports.onGCSMessage = onGCSMessage;
-exports.onRosterChanged = onRosterChanged;
 exports.onScreenEnter = onScreenEnter;
 exports.onScreenExit = onScreenExit;
 exports.onImageDownload = onImageDownload;
-exports.getMissionItemSupport = getMissionItemSupport;
-
+exports.onBroadcastRequest = onBroadcastRequest;

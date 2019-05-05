@@ -38,7 +38,7 @@ function onUnload() {
 
 // Called when a Mavlink message arrives
 function onMavlinkMessage(msg) {
-    d(`onMavlinkMessage(): msg.name=$msg.name`);
+    d(`onMavlinkMessage(): msg.name=${msg.name}`);
 }
 
 // Called when the GCS sends a message to this worker. Message format is 
@@ -95,22 +95,12 @@ function loadLayoutFor(panel) {
     return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
 }
 
-/**
- * Called when the worker roster (the list of installed workers) is changed.
- * If a worker needs to communicate with other workers, this is an opportunity to
- * check whether workers it needs to interact with are available.
- */
-function onRosterChanged() {
-    d("Roster has been changed");
-}
-
 exports.getAttributes = getAttributes;
 exports.loop = loop;
 exports.onLoad = onLoad;
 exports.onUnload = onUnload;
 exports.onMavlinkMessage = onMavlinkMessage;
 exports.onGCSMessage = onGCSMessage;
-exports.onRosterChanged = onRosterChanged;
 exports.onScreenEnter = onScreenEnter;
 exports.onScreenExit = onScreenExit;
 

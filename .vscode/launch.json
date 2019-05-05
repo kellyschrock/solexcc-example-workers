@@ -6,6 +6,15 @@
     "configurations": [
         {
             "type": "node",
+            "request": "attach",
+            "name": "Attach worker",
+            "address": "localhost",
+            "port": 9229,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "${workspaceFolder}",
+        },
+        {
+            "type": "node",
             "request": "launch",
             "name": "Shell test",
             "program": "${workspaceFolder}/shell/worker.js"

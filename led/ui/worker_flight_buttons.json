@@ -1,0 +1,35 @@
+{
+    "type": "LinearLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "orientation": "vertical",
+    "children": [
+        {
+            "type": "TextView",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "LEDs",
+            "gravity": "center",
+            "textColor": "white",
+            "layout_marginBottom": "6dip"
+        },
+        {
+            "type": "Space",
+            "layout_width": "match_parent",
+            "layout_height": "1dip",
+            "background": "white"
+        },
+        {
+            "type": "Button",
+            "id": "btn_run_led",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "text": "LEDs",
+            "background": "@null",
+            "on_click": {
+                "worker_id": "leds",
+                "msg_id": "config_dialog"
+            }
+        }
+    ]
+}

@@ -150,15 +150,6 @@ function onImageDownload(name) {
     return ATTRS.api.WorkerUI.serveImage(__dirname, name);
 }
 
-/**
- * Called when the worker roster (the list of installed workers) is changed.
- * If a worker needs to communicate with other workers, this is an opportunity to
- * check whether workers it needs to interact with are available.
- */
-function onRosterChanged() {
-    d("Roster has been changed");
-}
-
 var mPhasersArmed = false;
 
 function disarmPhasers() {
@@ -252,7 +243,6 @@ exports.onLoad = onLoad;
 exports.onUnload = onUnload;
 exports.onMavlinkMessage = onMavlinkMessage;
 exports.onGCSMessage = onGCSMessage;
-exports.onRosterChanged = onRosterChanged;
 exports.onScreenEnter = onScreenEnter;
 exports.onScreenExit = onScreenExit;
 exports.onImageDownload = onImageDownload;

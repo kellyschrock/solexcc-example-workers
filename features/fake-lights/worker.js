@@ -44,37 +44,41 @@ function onGCSMessage(msg) {
     return result;
 }
 
-function onRosterChanged() {
-    d("Roster has been changed");
-}
-
-function getMissionItemSupport(workerId) {
-    return {
-        id: ATTRS.id,
-        name: ATTRS.name,
-        actions: [
-            { 
-                id: "on", 
-                name: "On", 
-                msg_id: "lights_on", 
-                params: [
-                    {id: "brightness", name: "Brightness", type: "int", min: 10, max: 100, default: 50 },
-                    {
-                        id: "color", 
-                        name: "Color", 
-                        type: "enum", 
-                        values: [
-                            {id: "white", name: "White"},
-                            {id: "red", name: "Red"},
-                            {id: "green", name: "Green"},
-                            {id: "yellow", name: "Yellow"},
-                        ], 
-                        default: "red" 
-                    }
+function onBroadcastRequest(msg) {
+    switch(msg.type) {
+        case "mission_item_support": {
+            return {
+                id: ATTRS.id,
+                name: ATTRS.name,
+                actions: [
+                    { 
+                        id: "on", 
+                        name: "On", 
+                        msg_id: "lights_on", 
+                        params: [
+                            {id: "brightness", name: "Brightness", type: "int", min: 10, max: 100, default: 50 },
+                            {
+                                id: "color", 
+                                name: "Color", 
+                                type: "enum", 
+                                values: [
+                                    {id: "white", name: "White"},
+                                    {id: "red", name: "Red"},
+                                    {id: "green", name: "Green"},
+                                    {id: "yellow", name: "Yellow"},
+                                ], 
+                                default: "red" 
+                            }
+                        ]
+                    },
+                    { id: "off", name: "Off", msg_id: "off" }
                 ]
-            },
-            { id: "off", name: "Off", msg_id: "off" }
-        ]
+            }
+        }
+
+        default: {
+            return null;
+        }
     }
 }
 
@@ -84,5 +88,4 @@ exports.onLoad = onLoad;
 exports.onUnload = onUnload;
 exports.onMavlinkMessage = onMavlinkMessage;
 exports.onGCSMessage = onGCSMessage;
-exports.onRosterChanged = onRosterChanged;
-exports.getMissionItemSupport = getMissionItemSupport;
+exports.onBroadcastRequest = onBroadcastRequest;

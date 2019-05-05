@@ -2,17 +2,20 @@
 
 const spawn = require("child_process").spawn;
 const path = require("path");
+const fs = require("fs");
 
 const ATTRS = {
-    id: "shell",
+    id: "leds",
     // Name/description
-    name: "Shell demo",
-    description: "Runs a command in a shell and provides a worker interface",
+    name: "LEDs",
+    description: "Uses rpi_281x lib to control LEDs via Python scripts",
     // Does this worker want to loop?
     looper: false,
     // Mavlink messages we're interested in
     mavlinkMessages: []
 };
+
+var mMenuItems = {};
 
 function d(str) {
     if(process.mainModule === module) {
@@ -26,19 +29,44 @@ function getAttributes() {
     return ATTRS;
 }
 
-function loop() {
-}
+function loop() { }
 
 function onLoad() {
     d("onLoad()");
+    // TODO: Find all of the scripts under script/ and make a list of them.
+    const dir = path.join(__dirname, "script");
+
+    mMenuItems = {};
+
+    if(!fs.existsSync(dir)) {
+        d(`${dir} not found`);
+        return;
+    }
+
+    const files = fs.readdirSync(dir);
+    
+    for(let i = 0, size = files.length; i < size; ++i) {
+        const file = files[i];
+        if(!file.endsWith(".py")) continue;
+
+        const name = path.basename(file, ".py");
+        mMenuItems[name] = { id: name, path: path.join(dir, file), is_default: ("default.py" === file) };
+    }
+
+    d(`mMenuItems=${JSON.stringify(mMenuItems)}`);
 }
 
 function onUnload() {
     d("onUnload()");
+
+    // TODO: Call all-stop on scripts
 }
 
 function onMavlinkMessage(msg) {
     d(`onMavlinkMessage(): msg.name=$msg.name`);
+
+    // TODO: Watch for mode change messages and derive the mode name from 
+    // vehicle mode. call sendModeToLEDs(modename)
 }
 
 function onGCSMessage(msg) {
@@ -49,16 +77,23 @@ function onGCSMessage(msg) {
     };
 
     switch(msg.id) {
-        case "start": {
-            return startShellProcess();
+        // Display config dialog
+        case "config_dialog": {
+            sendContentDialogMsg();
+            break;
         }
 
-        case "stop": {
-            return stopShellProcess();
+        // Run a script
+        case "run_led": {
+            stopShellProcess();
+
+            return startShellProcess(msg.id);
         }
 
-        case "command": { 
-            return shellCommand(msg);
+        // Stop the script
+        case "stop_led": {
+            stopShellProcess();
+            break;
         }
     }
 
@@ -67,7 +102,7 @@ function onGCSMessage(msg) {
 
 var mChildProcess = null;
 
-function startShellProcess() {
+function startShellProcess(name) {
     d(`startShellProcess()`);
 
     if(mChildProcess) {
@@ -75,7 +110,13 @@ function startShellProcess() {
         return {ok: false, message: "Child process is already running"};
     }
 
-    const server = path.join(__dirname, "server.py");
+    const item = mMenuItems[name];
+    if(!item) {
+        d(`No item named ${name}`);
+        return {ok: false, message: `No item named ${name}`};
+    }
+
+    const server = item.path;
     d(`server=${server}`);
 
     const child = spawn("python", [ server ], { shell: true });
@@ -89,6 +130,7 @@ function startShellProcess() {
     child.stdout.on("data", function(data) {
         d(`child.stdout: ${data.toString('utf-8')}`);
 
+        // Speak output from the shell process.
         ATTRS.sendGCSMessage(ATTRS.id, {
             id: "speech",
             text: data.toString('utf-8')
@@ -97,6 +139,12 @@ function startShellProcess() {
 
     child.stderr.on("data", function(data) {
         d(`child.stderr: ${data.toString('utf-8')}`);
+
+        // Speak output from the shell process.
+        ATTRS.sendGCSMessage(ATTRS.id, {
+            id: "speech",
+            text: data.toString('utf-8')
+        });
     });
 
     child.on("close", function(code) {
@@ -106,17 +154,18 @@ function startShellProcess() {
 
     mChildProcess = child;
 
-    ATTRS.sendGCSMessage(ATTRS.id, {
-        id: "screen_update",
-        screen_id: "commands",
-        panel_id: "worker_flight_buttons",
-        values: {
-            btn_stop_shell: { enabled: true },
-            btn_start_shell: { enabled: false }
-        }
-    });
+    // TODO: Use this to update the button text to show which LED is running.
+    // ATTRS.sendGCSMessage(ATTRS.id, {
+    //     id: "screen_update",
+    //     screen_id: "commands",
+    //     panel_id: "worker_flight_buttons",
+    //     values: {
+    //         btn_stop_shell: { enabled: true },
+    //         btn_start_shell: { enabled: false }
+    //     }
+    // });
 
-    return {ok: true, message: "started"};
+    return { ok: true, message: `started ${name}` };
 }
 
 function stopShellProcess() {
@@ -127,19 +176,57 @@ function stopShellProcess() {
         return { ok: false, message: "Child process is not running" };
     }
 
-    ATTRS.sendGCSMessage(ATTRS.id, {
-        id: "screen_update",
-        screen_id: "commands",
-        panel_id: "worker_flight_buttons",
-        values: {
-            btn_stop_shell: { enabled: false },
-            btn_start_shell: { enabled: true }
-        }
-    });
+    // ATTRS.sendGCSMessage(ATTRS.id, {
+    //     id: "screen_update",
+    //     screen_id: "commands",
+    //     panel_id: "worker_flight_buttons",
+    //     values: {
+    //         btn_stop_shell: { enabled: false },
+    //         btn_start_shell: { enabled: true }
+    //     }
+    // });
 
     shellCommand({command: "quit"});
 
     return { ok: true, message: "stopped" };
+}
+
+function sendContentDialogMsg() {
+    if(!mMenuItems) {
+        return d(`No menu items to display`);
+    }
+
+    const items = [];
+
+    if(mMenuItems["default"]) {
+        const defItem = mMenuItems["default"];
+        items.push({id: "default", text: defItem.name, msg_id: "run_led" });
+    }
+
+    for(let prop in mMenuItems) {
+        if(prop === "default") continue;
+
+        const item = mMenuItems[prop];
+        items.push({id: item.id, text: prop, msg_id: "run_led" });
+    }
+
+    // d(`items=${JSON.stringify(items)}`);
+
+    ATTRS.sendGCSMessage(ATTRS.id, {
+        id: "content_dialog",
+        dialog_id: "dlg_content_download",
+        title: "Select LEDs",
+        text: "Pick an LED mode.",
+        list_items: items
+    });
+}
+
+function sendModeToLEDs(mode) {
+    if(!mChildProcess) {
+        return d("No child process");
+    }
+
+    mChildProcess.stdin.write(`mode ${mode.toLowerCase()}\n`);
 }
 
 function shellCommand(msg) {
@@ -202,6 +289,7 @@ exports.onGCSMessage = onGCSMessage;
 exports.onScreenEnter = onScreenEnter;
 
 if(process.mainModule === module) {
-    startShellProcess();
+    onLoad();
+    sendContentDialogMsg();
 }
 

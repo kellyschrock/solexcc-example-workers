@@ -44,10 +44,6 @@ function onGCSMessage(msg) {
     return result;
 }
 
-function onRosterChanged() {
-    d("Roster has been changed");
-}
-
 function getFeatures() {
     d("getFeatures()");
     
@@ -66,6 +62,5 @@ exports.onLoad = onLoad;
 exports.onUnload = onUnload;
 exports.onMavlinkMessage = onMavlinkMessage;
 exports.onGCSMessage = onGCSMessage;
-exports.onRosterChanged = onRosterChanged;
 exports.getFeatures = getFeatures;
 

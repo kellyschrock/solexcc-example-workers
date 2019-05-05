@@ -16,6 +16,7 @@ const mMessageMap = {
 };
 
 const mActionMap = {};
+var mMissionItemSupportWorkers = [];
 
 function d(str) {
     if(process.mainModule === module) {
@@ -95,6 +96,29 @@ function loadActionMap(msg) {
 
 function onRosterChanged() {
     d("Roster has been changed");
+
+    // Request mission item support info from other workers
+    mMissionItemSupportWorkers = [];
+    ATTRS.sendBroadcastRequest({ type: "mission_item_support" });
+}
+
+function onBroadcastResponse(msg) {
+    // d(`onBroadcastResponse(${JSON.stringify(msg)}`);
+
+    if(msg.request) {
+        switch(msg.request.type) {
+            case "mission_item_support": {
+
+                if(msg.response) {
+                    if(!mMissionItemSupportWorkers) mMissionItemSupportWorkers = [];
+
+                    mMissionItemSupportWorkers.push(msg.response);
+                }
+
+                break;
+            }
+        }
+    }
 }
 
 function getFeatures() {
@@ -105,33 +129,14 @@ function getFeatures() {
         mission: { 
             support_worker_id: ATTRS.id,
             upload_msg_id: "upload_mission",
-            workers: []
+            workers: mMissionItemSupportWorkers
         }
     };
-    
-    // Call other workers with specific implementations to get features from them.
-    // Fill out the mission/actions array
-    const others = ATTRS.getWorkerRoster();
-
-    if(others) {
-        others.map(function(item) {
-            const attrs = item.attributes;
-            const worker = item.worker;
-            d(`attrs=${attrs.id} item.enabled=${item.enabled}`);
-
-            if(item.enabled && attrs && worker && worker.getMissionItemSupport) {
-                const support = worker.getMissionItemSupport(ATTRS.id);
-                if(support) {
-                    output.mission.workers.push(support);
-                }
-            }
-        });
-    }
-
     return output;
 }
 
 function onMissionItemReached(msg) {
+    // Get the actions for this mission item.
     const actions = mActionMap[msg.seq];
     if(actions) {
         actions.map(function(action) {
@@ -147,14 +152,7 @@ function onMissionItemReached(msg) {
             }
 
             if(action.worker_id) {
-                const worker = ATTRS.findWorkerById(action.worker_id);
-                if(worker && worker.onGCSMessage) {
-                    try {
-                        worker.onGCSMessage(action);
-                    } catch (ex) {
-                        d("Error executing action: " + ex.message);
-                    }
-                }
+                ATTRS.sendWorkerMessage(action.worker_id, msg);
             }
         });
     }
@@ -168,6 +166,7 @@ exports.onMavlinkMessage = onMavlinkMessage;
 exports.onGCSMessage = onGCSMessage;
 exports.onRosterChanged = onRosterChanged;
 exports.getFeatures = getFeatures;
+exports.onBroadcastResponse = onBroadcastResponse;
 
 if(process.mainModule === module) {
     d("Hi!");
