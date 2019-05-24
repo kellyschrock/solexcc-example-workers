@@ -12,13 +12,35 @@ const ATTRS = {
     // Does this worker want to loop?
     looper: false,
     // Mavlink messages we're interested in
-    mavlinkMessages: ["HEARTBEAT"]
+    mavlinkMessages: ["HEARTBEAT", "GPS_RAW_INT"]
 };
 
 const MAV_MODE_FLAG_SAFETY_ARMED = 128;
 
+var mRCChannel = 0;
+var mRCMapping = [];
 var mMenuItems = {};
 var mChildProcess = null;
+
+// Listen for stuff from RC channels
+const mRCListener = {
+    onRCChannelsChanged: function (rc) {
+        d(`onRCChannelsChanged(): ${JSON.stringify(rc)}`);
+
+        // Did this happen on the channel we care about?
+        const value = rc[mRCChannel.toString()];
+        if(value) {
+            d(`update on channel ${mRCChannel}`);
+            // Find a match
+            mRCMapping.map(function(item) {
+                if(item.value == value) {
+                    d(`found item: ${item.itemid}`);
+                    selectMenuItem(item.itemid);
+                }
+            });
+        }
+    }
+};
 
 function d(str) {
     if(process.mainModule === module) {
@@ -36,11 +58,59 @@ function loop() { }
 
 function onLoad() {
     d("onLoad()");
+
+    // If we have RCInputs, set that up
+    if(ATTRS.api.RCInputs) {
+        const messages = ATTRS.api.RCInputs.getMavlinkMessages();
+        ATTRS.api.RCInputs.addEventListener(mRCListener);
+        ATTRS.subscribeMavlinkMessages(ATTRS.id, messages);
+    }
+
     loadMenuItems();
+    loadRCMapping();
+
+    // TODO: Uncomment this
+    // setTimeout(function() {
+    //     startShellProcess();
+    // }, 1000);
 
     setTimeout(function() {
-        startShellProcess();
-    }, 1000);
+        sendStateToLEDs();
+    }, 3000);
+}
+
+function selectMenuItem(id) {
+    const item = mMenuItems[id];
+
+    d(`selectMenuItem(${id}): item=${JSON.stringify(item)}`);
+
+    if(item) {
+        mSelectedItem = item;
+        sendScreenUpdates();
+    }
+}
+
+function loadRCMapping() {
+    const file = path.join(__dirname, "rcmap.json");
+
+    mRCMapping = [];
+
+    if(!fs.existsSync(file)) {
+        return d(`${file} not found`);
+    }
+
+    const content = fs.readFileSync(file);
+    try {
+        const jo = JSON.parse(content);
+
+        mRCChannel = jo.channel || 0;
+        mRCMapping = jo.items || [];
+
+        d(`mRCChannel=${mRCChannel} mRCMapping=${JSON.stringify(mRCMapping)}`);
+    } catch(ex) {
+        d(`Error in rcmap.json: ${ex.message}`);
+        mRCMapping = [];
+    }
 }
 
 function loadMenuItems() {
@@ -126,7 +196,8 @@ const mModeNameMap = {
 const mVehicleState = {
     armed: false,
     type: -1,
-    mode: -1
+    mode: -1,
+    fixType: 0
 };
 
 var mSelectedItem = null;
@@ -146,34 +217,83 @@ function toModeName(type, mode) {
     return item? item["" + mode]: null; // FU Javascript for treating numbers like strings
 }
 
+function hasGpsFix() {
+    return (mVehicleState.fixType >= 3);
+}
+
+function fixStateName() {
+    return (hasGpsFix())? "fix": "nofix";
+}
+
+function armStateName() {
+    return (mVehicleState.armed)? "armed": "disarmed"
+}
+
+function sendStateToLEDs() {
+    const str = `state ${armStateName()} ${fixStateName()}`;
+    shellCommand({command: str});
+}
+
+function sendModeToLEDs(mode) {
+    if (!mChildProcess) {
+        return d("No child process");
+    }
+
+    mChildProcess.stdin.write(`mode ${mode.toLowerCase()}\n`);
+}
+
 function onMavlinkMessage(msg) {
     if(!msg) return;
-    // d(`onMavlinkMessage(): msg.name=${msg.name}`);
+    // d(`onMavlinkMessage(): ${msg.name}`);
+
+    if(ATTRS.api.RCInputs) {
+        ATTRS.api.RCInputs.onMavlinkMessage(msg);
+    }
+
+    // Don't need to do any of this if not on the default item
+    if (!(mSelectedItem && mSelectedItem.is_default)) return;
 
     switch(msg.name) {
+        case "GPS_RAW_INT": {
+            if(mVehicleState.fixType != msg.fix_type) {
+                mVehicleState.fixType = msg.fix_type;
+
+                sendStateToLEDs();
+            }
+
+            break;
+        }
+
         case "HEARTBEAT": {
-            const defaultItem = (mSelectedItem && mSelectedItem.is_default);
+            // Ignore HB from the GCS
+	        if(msg.type == 6) return;
 
-            if(defaultItem) {
-                const vehicle_mode = msg.custom_mode;
+            const vehicle_mode = msg.custom_mode;
 
-                // If mode has changed, handle that
-                if(vehicle_mode != mVehicleState.mode) {
-                    mVehicleState.mode = vehicle_mode;
+            // If mode has changed, handle that
+            if(vehicle_mode != mVehicleState.mode) {
+                mVehicleState.mode = vehicle_mode;
 
-                    const mode_name = toModeName(msg.type, msg.custom_mode);
-                    d(mode_name);
+                const mode_name = toModeName(msg.type, msg.custom_mode);
+                d(`mode_name=${mode_name}`);
 
-                    if (mode_name) {
-                        shellCommand({command: `mode ${mode_name}`});
-                    }
+                if (mode_name) {
+                    shellCommand({command: `mode ${mode_name}`});
                 }
+            }
 
-                // If arm state has changed, handle that
-                const armed = ((msg.base_mode & MAV_MODE_FLAG_SAFETY_ARMED) === MAV_MODE_FLAG_SAFETY_ARMED);
-                if(armed != mVehicleState.armed) {
-                    mVehicleState.armed = armed;
-                    shellCommand({command: (armed) ? "arm" : "disarm"});
+            // If arm state has changed, handle that
+            const armed = ((msg.base_mode & MAV_MODE_FLAG_SAFETY_ARMED) === MAV_MODE_FLAG_SAFETY_ARMED);
+            if(armed != mVehicleState.armed) {
+                mVehicleState.armed = armed;
+                shellCommand({command: (armed) ? "arm" : "disarm"});
+
+                // After arming, wait 10s and then go back to displaying mode.
+                // The next HB message will cause the mode to get set and switch the LEDs.
+                if(mVehicleState.armed) {
+                    setTimeout(function () {
+                        mVehicleState.mode = -1;
+                    }, 9000); // Yes, 9s -- HB is at ~1s interval
                 }
             }
             break;
@@ -363,14 +483,6 @@ function sendContentDialogMsg() {
         text: "Pick an LED mode.",
         list_items: items
     });
-}
-
-function sendModeToLEDs(mode) {
-    if(!mChildProcess) {
-        return d("No child process");
-    }
-
-    mChildProcess.stdin.write(`mode ${mode.toLowerCase()}\n`);
 }
 
 function shellCommand(msg) {

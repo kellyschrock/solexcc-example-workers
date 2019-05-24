@@ -1,0 +1,11 @@
+{
+    "channel": 8,
+    "items": [
+        { "value": 1366, "itemid": "default" },
+        { "value": 1418, "itemid": "cop_mode" },
+        { "value": 1468, "itemid": "car_mode" },
+        { "value": 1519, "itemid": "party_mode" },
+        { "value": 1570, "itemid": "cylon_mode" },
+        { "value": 1621, "itemid": "all_off" }
+    ]
+}

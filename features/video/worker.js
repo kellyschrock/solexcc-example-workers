@@ -51,7 +51,24 @@ function getFeatures() {
     return {
         video: { 
             supported: true,
-            ports: [5600]
+            endpoints: [
+                {
+                    name: "FPV", 
+                    type: "rtsp",
+                    url: "rtsp://192.168.1.67:8554/cam0"
+                },
+                {
+                    name: "Fancy", 
+                    type: "rtsp",
+                    url: "rtsp://192.168.1.67:8554/cam4"
+                },
+                {
+                    name: "UDP Test",
+                    type: "udp",
+                    ip: "192.168.1.67",
+                    port: 5600
+                }
+            ]
         }
     };
 }

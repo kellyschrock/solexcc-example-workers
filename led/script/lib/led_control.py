@@ -17,7 +17,7 @@ import time
 import threading
 
 # LED strip configuration:
-LED_COUNT      = 28      # Number of LED pixels.
+LED_COUNT      = 60      # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
@@ -25,12 +25,17 @@ LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
 LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
-FRONT_LEFT     = range(0, 10)
-FRONT_RIGHT    = range(10, 20)
-REAR           = range(20, 28)
-REAR_LEFT	   = range(20, 23)
-REAR_RIGHT     = range(25, 28)
-REAR_CENTER    = range(22, 26)
+FRONT_LEFT     	= range(0, 15)
+FRONT_RIGHT    	= range(16, 30)
+REAR           	= range(31, 60)
+REAR_LEFT	   	= range(20, 23)
+REAR_RIGHT     	= range(25, 28)
+REAR_CENTER_TOP = range(50, 54)
+REAR_CENTER_BTM = range(36, 40)
+REAR_CENTER_SECTION	 = [36, 37, 38, 39, 50, 51, 52, 53]
+TAILLIGHTS 			 = [34, 35, 36, 39, 40, 41, 48, 49, 50, 53, 54, 55]
+TAILLIGHTS_ALL		 = [34, 35, 36, 37, 38, 39, 40, 41, 48, 49, 50, 51, 52, 53, 54, 55]
+CYLONS				 = [48, 49, 50, 51, 52, 53, 54, 55]
 
 _quit = False
 
@@ -125,6 +130,20 @@ class LEDControl():
 		self.stopAnyThreads()
 		allOn(self.strip, Color(0, 0, 0))
 
+	def slow_breathe(self, color1, color2):
+		global _quit
+		self.stopAnyThreads()
+		self.task = threading.Thread(target = doBreathe, args=(self.strip, color1, color2, 1))
+		_quit = False
+		self.task.start()
+
+	def fast_breathe(self, color1, color2):
+		global _quit
+		self.stopAnyThreads()
+		self.task = threading.Thread(target = doBreathe, args=(self.strip, color1, color2, 7,))
+		_quit = False
+		self.task.start()
+
 	def quit(self):
 		global _quit
 		_quit = True
@@ -205,7 +224,7 @@ def doOnMode(strip, mode):
 
 	while True:
 		if mode == "stabilize":
-			allOn(strip, Color(155, 0, 130))
+			planeLights(strip, Color(0, 255, 0))
 		elif mode == "land":
 			landingLights(strip)
 		elif mode == "acro":
@@ -220,11 +239,13 @@ def doOnMode(strip, mode):
 		elif mode == "rtl":
 			doBlink(strip, Color(0, 125, 125), 600)
 		elif mode == "pos_hold":
-			allOn(strip, Color(0, 0, 255))
+			planeLights(strip, Color(0, 0, 255))
 		elif mode == "alt_hold":
 			planeLights(strip, Color(60, 255, 0))
 		elif mode == "loiter":
 			planeLights(strip, Color(255, 0, 0))
+		elif mode == "brake":
+			brakeLights(strip)
 		elif mode == "drift":
 			allOn(strip, Color(35, 90, 255))
 		elif mode == "throw":
@@ -238,13 +259,13 @@ def doOnMode(strip, mode):
 		elif mode == "training":
 			allOn(strip, Color(35, 90, 255))
 		elif mode == "fbwa":
-			planeLights(strip, Color(255, 255, 0))
+			planeLights(strip, Color(255, 255, 255))
 		elif mode == "fbwb":
 			planeLights(strip, Color(0, 255, 255))
 		elif mode == "cruise":
 			planeLights(strip, Color(255, 255, 255))
 		elif mode == "autotune":
-			allOn(strip, Color(0, 0, 255))
+			doBlink(strip, Color(100, 0, 255), 500)
 		elif mode == "manual":
 			allOn(strip, Color(125, 45, 0))
 		elif mode == "learning":
@@ -267,7 +288,7 @@ def doCylonMode(strip):
 	strip.show()
 
 	frontColor = Color(30, 30, 30)
-	delay = 40
+	delay = 80
 
 	for i in FRONT_LEFT:
 		strip.setPixelColor(i, frontColor)
@@ -278,7 +299,7 @@ def doCylonMode(strip):
 	strip.show()
 
 	while True:
-		for i in REAR:
+		for i in CYLONS:
 			strip.setPixelColor(i, Color(0, 255, 0))
 			strip.setPixelColor(i-1, Color(0, 0, 0))
 			strip.show()
@@ -286,7 +307,7 @@ def doCylonMode(strip):
 			if _quit:
 				break
 			
-		for i in reversed(REAR):
+		for i in reversed(CYLONS):
 			strip.setPixelColor(i, Color(0, 255, 0))
 			strip.setPixelColor(i+1, Color(0, 0, 0))
 			strip.show()
@@ -343,19 +364,25 @@ def planeLights(strip, backColor=Color(255, 255, 255)):
 		strip.setPixelColor(i, Color(0, 0, 0))
 
 	while True:
-		fastFlash(REAR_CENTER, strip, backColor, 20/1000.0)
+		fastFlash(REAR_CENTER_SECTION, strip, backColor, 20/1000.0)
 		time.sleep(40/1000.0)
-		fastFlash(REAR_CENTER, strip, backColor, 20/1000.0)
+		fastFlash(REAR_CENTER_TOP, strip, backColor, 20/1000.0)
+		fastFlash(REAR_CENTER_BTM, strip, backColor, 20/1000.0)
 
 		if _quit:
 			break
 			
-		time.sleep(2)
+		time.sleep(1)
 
 		if _quit:
 			break
 
-def landingLights(strip, backColor=Color(255, 0, 0)):
+		time.sleep(1)
+
+		if _quit:
+			break
+
+def landingLights(strip, backColor=Color(10, 255, 0)):
 	for i in FRONT_RIGHT:
 		strip.setPixelColor(i, Color(255, 255, 255))
 
@@ -366,7 +393,7 @@ def landingLights(strip, backColor=Color(255, 0, 0)):
 		strip.setPixelColor(i, Color(0, 0, 0))
 
 	while True:
-		fastFlash(REAR_CENTER, strip, backColor, 20/1000.0)
+		fastFlash(REAR_CENTER_SECTION, strip, backColor, 20/1000.0)
 
 		if _quit:
 			break
@@ -386,11 +413,23 @@ def carLights(strip):
     for i in REAR:
         strip.setPixelColor(i, Color(0, 0, 0))
 
-    for i in REAR_LEFT:
-        strip.setPixelColor(i, Color(0, 125, 0))
+	for i in TAILLIGHTS:
+		strip.setPixelColor(i, Color(0, 100, 0))
 
-    for i in REAR_RIGHT:
-        strip.setPixelColor(i, Color(0, 125, 0))
+    strip.show()
+
+def brakeLights(strip):
+    for i in FRONT_LEFT:
+        strip.setPixelColor(i, Color(255, 255, 100))
+
+    for i in FRONT_RIGHT:
+        strip.setPixelColor(i, Color(255, 255, 100))
+
+    for i in REAR:
+        strip.setPixelColor(i, Color(0, 0, 0))
+
+	for i in TAILLIGHTS_ALL:
+		strip.setPixelColor(i, Color(0, 255, 0))
 
     strip.show()
 

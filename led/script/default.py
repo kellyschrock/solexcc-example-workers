@@ -46,6 +46,33 @@ while True:
 		leds.blink(toColor(line[6:]))
 	elif line.startswith("color "):
 		leds.color(toColor(line[6:]))
+	elif line.startswith("state "):
+		nofix = "nofix" in line
+		disarmed = "disarmed" in line
+
+		color1 = [0, 0, 0]
+		color2 = [0, 0, 0]
+
+		if nofix:
+			if disarmed:
+				color1 = [0, 60, 0]
+				color2 = [0, 10, 0]
+			else:
+				color1 = [0, 160, 0]
+				color2 = [0, 60, 0]
+		else:
+			if disarmed:
+				color1 = [60, 0, 0]
+				color2 = [10, 0, 0]
+			else:
+				color1 = [160, 0, 0]
+				color2 = [60, 0, 0]
+
+		if disarmed:
+			leds.slow_breathe(color1, color2)
+		else:
+			leds.fast_breathe(color1, color2)
+
 	elif line == "all_off":
 		leds.all_off()
 	elif line == "arm":

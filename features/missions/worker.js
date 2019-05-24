@@ -42,7 +42,7 @@ function onUnload() {
 }
 
 function onMavlinkMessage(msg) {
-    d(`onMavlinkMessage(): msg.name=$msg.name`);
+    d(`onMavlinkMessage(): msg.name=${msg.name}`);
 
     if(!msg) return;
     if(!msg.name) return;
@@ -138,11 +138,13 @@ function getFeatures() {
 function onMissionItemReached(msg) {
     // Get the actions for this mission item.
     const actions = mActionMap[msg.seq];
+    d(`actions for ${msg.seq}=${JSON.stringify(actions)}`);
+
     if(actions) {
         actions.map(function(action) {
             // Make a message to send to the worker
             const msg = {
-                id: action.id
+                id: action.msg_id || action.id
             };
 
             if(action.params) {
