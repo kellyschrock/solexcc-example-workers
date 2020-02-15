@@ -18,6 +18,7 @@ send events from that device to the worker specified in `worker_id` in the featu
 Here are the fields in a `motion_event`:
 
 | id | Description | Range |
+|------------|--------------------|-----------|
 | `s_l_x`| Left Stick left/right (yaw)   | -1 to 1 |
 | `s_l_y`| Left Stick up/down (throttle) | -1 to 1 |
 | `s_r_x`| Right Stick left/right (roll)   | -1 to 1 |
@@ -41,6 +42,7 @@ None of the un-changed values are sent in this case.
 Key events are sent when one of the buttons on the controller is pressed. They have the following identifiers:
 
 | id | keyCode | Description |
+|--------|----------|--------------------|
 |button_l1|102|Left top/front button|
 |button_l2|104|Left bottom/trigger button|
 |button_r1|103|Right top/front button|
