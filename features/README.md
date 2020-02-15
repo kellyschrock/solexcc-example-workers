@@ -43,16 +43,16 @@ Key events are sent when one of the buttons on the controller is pressed. They h
 
 | id | keyCode | Description |
 |--------|----------|--------------------|
-|button_l1|102|Left top/front button|
-|button_l2|104|Left bottom/trigger button|
-|button_r1|103|Right top/front button|
-|button_r2|105|Right bottom/trigger button|
-|button_thumb_l|106|Left stick press down|
-|button_thumb_r|107|Right stick press down|
-|button_y|100|Y button|
-|button_x|99|X button|
-|button_a|96|A button|
-|button_b|97|B button|
+|`button_l1`|102|Left top/front button|
+|`button_l2`|104|Left bottom/trigger button|
+|`button_r1`|103|Right top/front button|
+|`button_r2`|105|Right bottom/trigger button|
+|`button_thumb_l`|106|Left stick press down|
+|`button_thumb_r`|107|Right stick press down|
+|`button_y`|100|Y button|
+|`button_x`|99|X button|
+|`button_a`|96|A button|
+|`button_b`|97|B button|
 
 These are sent in the `key_event` event specified in the `feature` for the joystick worker. So if you specify that as (eg) `on_key_event`, you'll
 see a message like this when a button is pressed on the controller:
