@@ -8,6 +8,57 @@ specific action based on what it finds. Currently the things it looks for are as
 This just indicates whether video streaming support is available on the vehicle. Solex uses it to determine whether to display the 
 Video screen when the flight screen is opened. An example of reporting this is in the `video` feature in this directory.
 
+## `joystick`
+
+Indicates CC-level joystick support. When present, Solex will listen for events coming from an external joystick controller (e.g. XBox, etc) and 
+send events from that device to the worker specified in `worker_id` in the feature. The relevant event types are `key_event` and `motion_event`.
+
+### `motion_event`
+
+Here are the fields in a `motion_event`:
+
+| id | Description | Range |
+| `s_l_x`| Left Stick left/right (yaw)   | -1 to 1 |
+| `s_l_y`| Left Stick up/down (throttle) | -1 to 1 |
+| `s_r_x`| Right Stick left/right (roll)   | -1 to 1 |
+| `s_r_y`| Right Stick up/down (pitch) | -1 to 1 |
+| `dp_x`| DPad left/right | -1 to 1 |
+| `dp_y`| DPad up/down | -1 to 1 |
+| `tr_l`| Left trigger | 0 to 1 |
+| `tr_r`| Right trigger | 0 to 1 |
+
+To avoid overwhelming the websocket connection with a ton of data, only changed values 
+are sent in a joystick message. So if you move the right stick around, you'll see messages like this:
+
+```
+{"s_r_x" :0.17647064, "s_r_y": 0.20000005, "id": "on_motion_event"}
+```
+
+None of the un-changed values are sent in this case.
+
+### `key_event`
+
+Key events are sent when one of the buttons on the controller is pressed. They have the following identifiers:
+
+| id | keyCode | Description |
+|button_l1|102|Left top/front button|
+|button_l2|104|Left bottom/trigger button|
+|button_r1|103|Right top/front button|
+|button_r2|105|Right bottom/trigger button|
+|button_thumb_l|106|Left stick press down|
+|button_thumb_r|107|Right stick press down|
+|button_y|100|Y button|
+|button_x|99|X button|
+|button_a|96|A button|
+|button_b|97|B button|
+
+These are sent in the `key_event` event specified in the `feature` for the joystick worker. So if you specify that as (eg) `on_key_event`, you'll
+see a message like this when a button is pressed on the controller:
+
+```
+{"name":"button_y","code":100,"id":"on_key_event"}
+```
+
 ## `mission`
 
 Indicates CC-level mission support. When a worker reports mission support, Solex will send a JSON-encoded version of the mission to it
