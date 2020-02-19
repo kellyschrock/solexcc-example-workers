@@ -53,13 +53,22 @@ Key events are sent when one of the buttons on the controller is pressed. They h
 |`button_x`|99|X button|
 |`button_a`|96|A button|
 |`button_b`|97|B button|
+|`button_start`|108|Start button|
+|`button_select`|109|Select button|
 
 These are sent in the `key_event` event specified in the `feature` for the joystick worker. So if you specify that as (eg) `on_key_event`, you'll
 see a message like this when a button is pressed on the controller:
 
+Key down:
 ```
-{"name":"button_y","code":100,"id":"on_key_event"}
+{"100":1, "name":"button_y", "id":"on_key_event"}
 ```
+
+Key up:
+```
+{"100":0, "id":"on_key_event"}
+```
+
 
 ## `mission`
 
