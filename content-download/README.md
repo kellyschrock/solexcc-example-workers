@@ -10,8 +10,7 @@ You would initiate a content-download message to tell Solex to request a downloa
 
 ## UI
 
-The UI in this sample has two buttons on it. The one on the Start screen shows how to display a dialog letting the user pick a particular piece of content to download.
-Once they pick an item, it's downloaded to the device and a "Share" screen appears to handle the file that was downloaded.
+The UI in this sample has two buttons on it. The one on the Start screen shows how to display a dialog letting the user pick a particular piece of content to download. Once they pick an item, it's downloaded to the device and a "Share" screen appears to handle the file that was downloaded.
 
 The one on the Flight screen just initiates a download directly.
 
