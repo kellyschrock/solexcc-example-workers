@@ -79,25 +79,55 @@ function onGCSMessage(msg) {
 //
 // Return a UI for the specified screen.
 //
-function onScreenEnter(screen) {
-    switch(screen) {
-        case ATTRS.api.WorkerUI.Const.SCREEN_FLIGHT: {
-            const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_SHOT_BUTTONS);
-
-            return (body)? {
-                screen_id: screen, 
-                worker_shot_buttons: body
-            }: null;
+function onScreenEnter(screen, type) {
+    switch(type) {
+        case "html": {
+            return {
+                screen_id: screen,
+                worker_shot_buttons: loadHTMLLayoutFor("worker_shot_buttons")
+            };
         }
-
+        
         default: {
-            return null;
+            switch (screen) {
+                case ATTRS.api.WorkerUI.Const.SCREEN_FLIGHT: {
+                    const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_SHOT_BUTTONS);
+
+                    return (body) ? {
+                        screen_id: screen,
+                        worker_shot_buttons: body
+                    } : null;
+                }
+
+                default: {
+                    return null;
+                }
+            }
         }
     }
 }
 
 function onScreenExit(screen) {
 
+}
+
+function loadHTMLLayoutFor(panel) {
+    const fs = require("fs");
+    const path = require("path");
+
+    const file = path.join(path.join(__dirname, "ui"), `${panel}.html`);
+    d(`load: ${panel}: file=${file}`);
+
+    if(fs.existsSync(file)) {
+        try {
+            const content = fs.readFileSync(file);
+            return content.toString("utf8");
+        } catch(ex) {
+            console.error(ex.message);
+        }
+    }
+
+    return null;
 }
 
 function loadLayoutFor(panel) {

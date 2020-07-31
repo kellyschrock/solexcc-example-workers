@@ -27,7 +27,7 @@ let loopIterations = 0;
 // Called from dispatch.loop()
 function loop() {
     if(++loopIterations > 8) {
-        d(`Send time update message`);
+        // d(`Send time update message`);
         sendTimeUpdateMessage();
         loopIterations = 0;
     }
@@ -51,7 +51,8 @@ function onMavlinkMessage(msg) {
 // Called when the GCS sends a message to this worker. Message format is 
 // entirely dependent on agreement between the FCS and worker implementation.
 function onGCSMessage(msg) {
-    d(`onGCSMessage(): msg.id=${msg.id}`);
+    // d(`onGCSMessage(): msg.id=${msg.id}`);
+    d(`onGCSMessage(): ${JSON.stringify(msg)}`);
 
     const result = {
         ok: true
@@ -59,7 +60,7 @@ function onGCSMessage(msg) {
 
     switch(msg.id) {
         case "show_dialog": {
-            sendShowDialogMessage();
+            sendShowDialogMessage(msg.type);
             break;
         }
 
@@ -84,7 +85,7 @@ function onGCSMessage(msg) {
         }
 
         case "show_fullscreen": {
-            sendShowFullscreenMessage();
+            sendShowFullscreenMessage(msg.type);
             break;
         }
 
@@ -114,19 +115,40 @@ function onGCSMessage(msg) {
 }
 
 // Return a UI for the specified screen.
-function onScreenEnter(screen) {
-    switch(screen) {
-        case ATTRS.api.WorkerUI.Const.SCREEN_START: {
-            const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_BUTTONS);
+function onScreenEnter(screen, type) {
+    switch(type) {
+        case "html": {
+            switch(screen) {
+                case ATTRS.api.WorkerUI.Const.SCREEN_START: {
+                    const body = loadHTMLLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_BUTTONS);
 
-            return (body)? {
-                screen_id: screen, 
-                worker_buttons: body
-            }: null;
+                    return (body) ? {
+                        screen_id: screen,
+                        worker_buttons: body
+                    } : null;
+                }
+
+                default: {
+                    return null;
+                }
+            }
         }
 
         default: {
-            return null;
+            switch (screen) {
+                case ATTRS.api.WorkerUI.Const.SCREEN_START: {
+                    const body = loadLayoutFor(ATTRS.api.WorkerUI.Const.PANEL_WORKER_BUTTONS);
+
+                    return (body) ? {
+                        screen_id: screen,
+                        worker_buttons: body
+                    } : null;
+                }
+
+                default: {
+                    return null;
+                }
+            }
         }
     }
 }
@@ -139,8 +161,10 @@ function onImageDownload(name) {
     return ATTRS.api.WorkerUI.serveImage(__dirname, name);
 }
 
-function sendShowDialogMessage() {
-    const body = loadLayoutFor("display_dialog");
+function sendShowDialogMessage(type) {
+    const body = (type == "html")?
+        loadLayoutFor("display_html_dialog"):
+        loadLayoutFor("display_dialog");
 
     if(body) {
         ATTRS.sendGCSMessage(ATTRS.id, { id: "display_dialog", content: body });
@@ -155,8 +179,19 @@ function sendMessageDialogMessage() {
     }
 }
 
-function sendShowFullscreenMessage() {
-    const body = loadLayoutFor("display_fullscreen");
+function sendShowFullscreenMessage(type) {
+    let body = null;
+    switch(type) {
+        case "html": {
+            body = loadHTMLLayoutFor("display_fullscreen");
+            break;
+        }
+
+        default: {
+            body = loadLayoutFor("display_fullscreen");
+            break;
+        }
+    }
 
     if (body) {
         ATTRS.sendGCSMessage(ATTRS.id, { id: "display_fullscreen", content: body });
@@ -182,6 +217,25 @@ function formatDate(d) {
 
 function loadLayoutFor(panel) {
     return ATTRS.api.WorkerUI.loadLayout(__dirname, panel);
+}
+
+function loadHTMLLayoutFor(panel) {
+    const fs = require("fs");
+    const path = require("path");
+
+    const file = path.join(path.join(__dirname, "ui"), `${panel}.html`);
+    d(`load: ${panel}: file=${file}`);
+
+    if (fs.existsSync(file)) {
+        try {
+            const content = fs.readFileSync(file);
+            return content.toString("utf8");
+        } catch (ex) {
+            console.error(ex.message);
+        }
+    }
+
+    return null;
 }
 
 exports.getAttributes = getAttributes;
