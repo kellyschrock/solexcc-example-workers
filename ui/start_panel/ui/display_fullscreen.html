@@ -1,0 +1,52 @@
+<div id="my_stuff">
+    <style>
+        #my_stuff {
+            background-color: darkblue;
+            opacity: 60%;
+            padding: 10px;
+        }
+
+        #buttons {
+            border: 1px solid orange;
+            padding: 4px;
+        }
+
+        #buttons button {
+            border: 1px solid white;
+            color: white;
+            border-radius: 3px;
+            background-color: black;
+        }
+    </style>
+
+    <script>
+        function onButton1Click() {
+            const listener = window.workerListener;
+            if (listener && listener.onWorkerCommand) {
+                // Send the specified command to the worker.
+                listener.onWorkerCommand("start_panel", "show_dialog", { type: "html" });
+            }
+        }
+
+        function onButton2Click() {
+            alert("Nothing to see here");
+        }
+
+        function onButton3Click() {
+            toast("Hi");
+        }
+    </script>
+
+    <h1>Here's some content from a worker.</h1>
+    <p>
+        You can put whatever you want to in here, and attach event handlers to controls that will be updated when you interact with them.
+    </p>
+    <p>
+        Buttons, for example.
+    </p>
+    <div id="buttons">
+        <button onclick="onButton1Click();">A button</button>
+        <button onclick="onButton2Click();">Another one</button>
+        <button onclick="onButton3Click();">And another</button>
+    </div>
+</div>

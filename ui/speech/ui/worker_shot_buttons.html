@@ -1,0 +1,48 @@
+<div style="padding: 10px">
+    <style>
+        h3 { font-size: 16pt; }
+
+        hr.fancy {
+            background-color: #66ff00;
+        }
+
+        .speech_button {
+            color: white;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .speech_button:hover {
+            font-weight: bold;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function onSayTTSClick() {
+            const listener = window.workerListener;
+            if(listener && listener.onWorkerCommand) {
+                listener.onWorkerCommand("speech", "say_tts");
+            }
+        }
+
+        function onSayTextClick() {
+            const listener = window.workerListener;
+            if (listener && listener.onWorkerCommand) {
+                listener.onWorkerCommand("speech", "say_text");
+            }
+        }
+
+        function onSayErrorClick() {
+            const listener = window.workerListener;
+            if (listener && listener.onWorkerCommand) {
+                listener.onWorkerCommand("speech", "say_error");
+            }
+        }
+    </script>
+
+    <h3>Speech Example</h3>
+    <hr class="fancy"/>
+    <div id="say_tts" class="speech_button worker_control" worker_id="speech" msg_id="say_tts" onclick="onSayTTSClick();">TTS</div>
+    <div id="say_text" class="speech_button worker_control" worker_id="speech" msg_id="say_text" onclick="onSayTextClick();">Text</div>
+    <div id="say_error" class="speech_button worker_control" worker_id="speech" msg_id="say_error" onclick="onSayErrorClick();">Error</div>
+</div>

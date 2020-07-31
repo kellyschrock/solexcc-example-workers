@@ -1,0 +1,62 @@
+<div style="padding: 10px">
+    <style>
+        h3 {
+            font-size: 16pt;
+        }
+
+        hr.fancy {
+            background-color: #66ff00;
+        }
+
+        div#current_time {
+            padding: 6px;
+            border: 1px solid orange;
+            border-radius: 2px;
+        }
+
+        .panel_button {
+            color: white;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .panel_button:hover {
+            font-weight: bold;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+        function onDoDialogClick() {
+            const listener = window.workerListener;
+            if (listener && listener.onWorkerCommand) {
+                // Send the specified command to the worker.
+                listener.onWorkerCommand("start_panel", "show_dialog", { type: "html" });
+            }
+        }
+
+        function onMessageDialogClick() {
+            const listener = window.workerListener;
+            if (listener && listener.onWorkerCommand) {
+                // Send the specified command to the worker.
+                listener.onWorkerCommand("start_panel", "message_dialog", { type: "html" });
+            }
+        }
+
+        function onFullScreenClick() {
+            const listener = window.workerListener;
+            if (listener && listener.onWorkerCommand) {
+                // Send the specified command to the worker.
+                listener.onWorkerCommand("start_panel", "show_fullscreen", { type: "html" });
+            }
+        }
+    </script>
+
+    <h3>Worker buttons</h3>
+    <hr class="fancy" />
+    <div id="current_time">Current time</div>
+    <br/>
+    <div id="do_dialog" class="panel_button worker_control" onclick="onDoDialogClick();">Show Dialog</div>
+    <div id="do_plain_dialog" class="panel_button worker_control" onclick="onMessageDialogClick();">Plain Dialog</div>
+    <div id="do_fullscreen" class="panel_button worker_control" onclick="onFullScreenClick();">Widgets!</div>
+</div>

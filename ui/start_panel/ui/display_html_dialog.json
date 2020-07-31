@@ -1,0 +1,10 @@
+{
+    "id": "my_dialog",
+    "screen_id": "start",
+    "title": "Hey, a dialog.",
+    "message": "<b>Here</b> is some basic HTML. Put HTML here <em>to display it in the dialog</em>.",
+    "buttons": [
+        { "id": "btn_cancel", "text": "Cancel", "worker_id": "start_panel", "msg_id": "my_dialog_cancel" },
+        { "id": "btn_ok", "text": "OK", "worker_id": "start_panel", "msg_id": "my_dialog_ok" }
+    ]
+}
